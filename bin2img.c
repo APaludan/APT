@@ -4,15 +4,10 @@
 //The following function converts the ones and zeroes in the text file into a character.
 //For example the text file may have the 8 consecutive characters '1', '0', '0', '0', '1', '0', '0', '0'.
 //This converts it into the character equivalent of the binary value 10001000
-<<<<<<< HEAD
 
 //aloha :-)
 
 char bytefromtext(char* text) 
-=======
-// hej cj
-char bytefromtext(char *text)
->>>>>>> 28afb23f8a6a51e250b6e88bd719e42a38cb6276
 {
   char result = 0;
   for (int i = 0; i < 8; i++)
