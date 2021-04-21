@@ -1,17 +1,17 @@
-#include<stdio.h>
-#include<conio.h>
+#include <stdio.h>
+#include <conio.h>
 
-void main()
+void img2bin()
 {
   //clrscr();
   FILE *fptr;
   FILE *txt;
   int c;
 
-  fptr=fopen("img.bmp","rb");
-  txt=fopen("test1.txt","w");
+  fptr = fopen("underwater-scene-1.jpg", "rb");
+  txt = fopen("test1.txt", "w");
 
-  if(fptr==NULL)
+  if (fptr == NULL)
   {
     printf("NOTHING In FILE");
     fclose(fptr);
@@ -20,22 +20,20 @@ void main()
   {
     printf("success");
 
-    while ((c = fgetc (fptr)) != EOF)
+    while ((c = fgetc(fptr)) != EOF)
     {
-      for(int i=0;i<=7;i++)
+      for (int i = 0; i <= 7; i++)
       {
-        if(c&(1<<(7-i)))
+        if (c & (1 << (7 - i)))
         {
-          fputc('1',txt);
+          fputc('1', txt);
         }
         else
         {
-          fputc('0',txt);
+          fputc('0', txt);
         }
       }
-      // fprintf(txt,"\t");
     }
-
   }
 
   fclose(fptr);
