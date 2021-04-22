@@ -11,7 +11,7 @@ void makeAudio(int16_t *buf, long long int N);
 void cleanUp(int idk);
 void ccImage(void);
 
-double amp = 32000;  // amplitude. skal være 2000 ellers går alt i stykker
+double amp = 32000;  // amplitude
 double sf = 44000.0; // sampling frequency
 double bd = 200 * 2; // duration of each bit
 double freq = 440.0; // frequency of sine wave
