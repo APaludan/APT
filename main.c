@@ -8,26 +8,14 @@
 void printInfo(long long int N, char *input);
 void makeAudioBuffer(int16_t *buf, char *input, long long int filelen);
 void makeAudio(int16_t *buf, long long int N);
+void cleanUp(int idk);
+void ccImage(void);
 
 double amp = 32000;  // amplitude. skal være 2000 ellers går alt i stykker
 double sf = 44000.0; // sampling frequency
 double bd = 200 * 2; // duration of each bit
 double freq = 440.0; // frequency of sine wave
 
-void cleanUp(int idk)
-{
-    if (idk == 1)
-        remove("underwater.png");
-    remove("compressed.jpeg");
-    remove("imagebin.txt");
-}
-
-void ccImage(void)
-{
-    system("ffmpeg.exe -i underwater.png -q:v 20 -vf scale=10:-1 compressed.jpeg");
-    system("img2bin.exe compressed.jpeg");
-    printf("Image converted to bits.\n");
-}
 
 int main(void)
 {
@@ -36,7 +24,7 @@ int main(void)
     if (mode == 1)
     {
         system("ffmpeg.exe -f dshow -y -i \"video=Lenovo EasyCamera\" -frames:v 1 underwater.png");
-        sleep(2000);
+        sleep(1000);
     }
     ccImage();
 
@@ -77,6 +65,21 @@ int main(void)
     system("out.wav");
     printf("Transmission finished\n");
     return 0;
+}
+
+void cleanUp(int idk)
+{
+    if (idk == 1)
+        remove("underwater.png");
+    remove("compressed.jpeg");
+    remove("imagebin.txt");
+}
+
+void ccImage(void)
+{
+    system("ffmpeg.exe -i underwater.png -q:v 5 -vf scale=480:-1 compressed.jpeg");
+    system("img2bin.exe compressed.jpeg");
+    printf("Image converted to bits.\n");
 }
 
 void makeAudio(int16_t *buf, long long int N)
