@@ -133,5 +133,5 @@ void printInfo(long long int N, char *input)
 {
     float seconds = N / sf;
     float bps = strlen(input) / seconds;
-    printf("Input len: %d\nN: %lld\nseconds: %f\nbps: %f\n", strlen(input), N, seconds, bps);
+    printf("Input len: %d\nN: %lld\nseconds: %.0f\nbps: %.0f\n", strlen(input), N, seconds, bps);
 }
