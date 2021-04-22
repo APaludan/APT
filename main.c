@@ -73,6 +73,7 @@ void cleanUp(int idk)
         remove("underwater.png");
     remove("compressed.jpeg");
     remove("imagebin.txt");
+    return;
 }
 
 void ccImage(void)
@@ -80,6 +81,7 @@ void ccImage(void)
     system("ffmpeg.exe -i underwater.png -q:v 5 -vf scale=360:-1 compressed.jpeg");
     system("img2bin.exe compressed.jpeg");
     printf("Image converted to bits.\n");
+    return;
 }
 
 void makeAudio(int16_t *buf, long long int N)
@@ -96,18 +98,11 @@ void makeAudioBuffer(int16_t *buf, char *input, long long int filelen)
     long long int n = 0; // buffer index
     int j = 0;           // bit array index
 
-    /*
-    for (n = 0; n < sf*2; n++)
-    {
-        buf[n] = amp * sin(2 * M_PI * (n/sf * freq));
-    }
-    */
-
     while (j < filelen) // loop - input
     {
+        int e = n + bd;
         if (input[j] - '0' == 1)
         {
-            int e = n + bd;
             for (n = n; n < e; n++) //loop - audio buffer
             {
                 double sample = amp * sin(2 * M_PI * (n / sf * (freq)));
@@ -117,7 +112,6 @@ void makeAudioBuffer(int16_t *buf, char *input, long long int filelen)
         }
         else if (input[j] - '0' == 0)
         {
-            int e = n + bd;
             for (n = n; n < e; n++) //loop - audio buffer
             {
                 double sample = amp * sin(2 * M_PI * (n / sf * (freq + 220)));
