@@ -24,7 +24,7 @@ int main(void)
     if (mode == 1)
     {
         system("ffmpeg.exe -f dshow -y -i \"video=Lenovo EasyCamera\" -frames:v 1 underwater.png");
-        sleep(1000);
+        Sleep(1000);
     }
     ccImage();
 
@@ -77,7 +77,7 @@ void cleanUp(int idk)
 
 void ccImage(void)
 {
-    system("ffmpeg.exe -i underwater.png -q:v 5 -vf scale=480:-1 compressed.jpeg");
+    system("ffmpeg.exe -i underwater.png -q:v 5 -vf scale=360:-1 compressed.jpeg");
     system("img2bin.exe compressed.jpeg");
     printf("Image converted to bits.\n");
 }
