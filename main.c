@@ -1,19 +1,19 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <stdint.h>
 #include <math.h>
 #include <string.h>
-#include <stdlib.h>
 #include <windows.h>
 
 void printInfo(long long int N, char *input);
 void makeAudioBuffer(int16_t *buf, char *input, long long int filelen);
 void makeAudio(int16_t *buf, long long int N);
-void cleanUp(int idk);
+void cleanUp(int mode);
 void ccImage(void);
 
 double amp = 32000;  // amplitude
 double sf = 44000.0; // sampling frequency
-double bd = 200 * 2; // duration of each bit
+double bd = 200 * 2; // duration of each bit (samples per bit)
 double freq = 440.0; // frequency of sine wave
 
 int main(void)
@@ -22,31 +22,31 @@ int main(void)
     cleanUp(mode);
     if (mode == 1)
     {
-        system("ffmpeg.exe -hide_banner -loglevel error -f  dshow -y -i \"video=Lenovo EasyCamera\" -frames:v 1 underwater.png");
-        Sleep(1000);
+        system("ffmpeg.exe -hide_banner -loglevel error -f  dshow -y -i \"video=Lenovo EasyCamera\" -frames:v 1 underwater.png"); // capture picture with webcam
+        Sleep(1000); // wait for webcam capture
     }
     ccImage();
 
-    FILE *fp = fopen("imagebin.txt", "rb");
+    FILE *fp = fopen("imagebin.txt", "rb"); // open binary txt
     if (fp == NULL)
     {
-        Sleep(1000);
+        Sleep(1000); // if file doesnt exist, wait additional 1 sec. maybe pc is slow
         if (fp == NULL)
         {
             printf("Could not open file.");
             return 1;
         }
     }
-    fseek(fp, 0, SEEK_END);
-    long long int filelen = ftell(fp);
-    rewind(fp);
+    fseek(fp, 0, SEEK_END); // filepointer to end of file
+    long long int filelen = ftell(fp); // read file length
+    rewind(fp); // fp back to beginning
     char *input = malloc(filelen * sizeof(char));
     if (input == NULL)
     {
         printf("Input memory allocation error");
         return 1;
     }
-    fread(input, filelen, 1, fp);
+    fread(input, filelen, 1, fp); // read binary file
     fclose(fp);
 
     long long int N = strlen(input) * bd; // number of samples
@@ -67,16 +67,16 @@ int main(void)
     return 0;
 }
 
-void cleanUp(int idk)
+void cleanUp(int mode) // remove old files
 {
-    if (idk == 1)
+    if (mode == 1)
         remove("underwater.png");
     remove("compressed.jpeg");
     remove("imagebin.txt");
     return;
 }
 
-void ccImage(void)
+void ccImage(void) // compress and convert to bits image
 {
     system("ffmpeg.exe -hide_banner -loglevel error -i underwater.png -q:v 5 -vf scale=360:-1 compressed.jpeg");
     system("img2bin.exe compressed.jpeg");
@@ -103,7 +103,7 @@ void makeAudioBuffer(int16_t *buf, char *input, long long int filelen)
         int e = n + bd;
         if (input[j] - '0' == 1)
         {
-            for (n = n; n < e; n++) //loop - audio buffer
+            for (n = n; n < e; n++) // loop - audio buffer
             {
                 double sample = amp * sin(2 * M_PI * (n / sf * (freq)));
                 buf[n] = (int16_t)sample;
@@ -112,14 +112,14 @@ void makeAudioBuffer(int16_t *buf, char *input, long long int filelen)
         }
         else if (input[j] - '0' == 0)
         {
-            for (n = n; n < e; n++) //loop - audio buffer
+            for (n = n; n < e; n++) // loop - audio buffer
             {
                 double sample = amp * sin(2 * M_PI * (n / sf * (freq + 220)));
                 buf[n] = (int16_t)sample;
             }
             j++;
         }
-        else
+        else //if something is wrong just skip this character
         {
             j++;
         }
