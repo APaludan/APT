@@ -6,24 +6,24 @@
 #include <windows.h>
 
 void printInfo(long long int N, char *input);
-void makeAudioBuffer(int16_t *buf, char *input, long long int filelen);
+void makeAudioBuffer(int16_t *buf, char *input, long long int filelen, long long int N);
 void makeAudio(int16_t *buf, long long int N);
 void cleanUp(int mode);
 void ccImage(void);
 
 double amp = 32000;  // amplitude
-double sf = 44000.0; // sampling frequency
-double bd = 200 * 2; // duration of each bit (samples per bit)
-double freq = 440.0; // frequency of sine wave
+double sf = 88000.0; // sampling frequency
+double bd = 400 * 2; // duration of each bit (samples per bit)
+double freq = 880.0; // frequency of sine wave
 
 int main(void)
 {
-    int mode = 0; // No webcam = 0 | webcam = 1
+    int mode = 0; // 0 = No webcam | 1 = webcam
     cleanUp(mode);
     if (mode == 1)
     {
         system("ffmpeg.exe -hide_banner -loglevel error -f  dshow -y -i \"video=Lenovo EasyCamera\" -frames:v 1 underwater.png"); // capture picture with webcam
-        Sleep(1000); // wait for webcam capture
+        Sleep(1000);                                                                                                              // wait for webcam capture
     }
     ccImage();
 
@@ -37,9 +37,9 @@ int main(void)
             return 1;
         }
     }
-    fseek(fp, 0, SEEK_END); // filepointer to end of file
+    fseek(fp, 0, SEEK_END);            // filepointer to end of file
     long long int filelen = ftell(fp); // read file length
-    rewind(fp); // fp back to beginning
+    rewind(fp);                        // fp back to beginning
     char *input = malloc(filelen * sizeof(char));
     if (input == NULL)
     {
@@ -59,10 +59,10 @@ int main(void)
         return 1;
     }
 
-    makeAudioBuffer(buf, input, filelen);
+    makeAudioBuffer(buf, input, filelen, N);
     makeAudio(buf, N);
     printf("Transmitting...");
-    system("out.wav");
+    system("out.wav"); // play audio in system standard media player. must open in media player that closed after play
     printf("Transmission finished\n");
     return 0;
 }
@@ -76,10 +76,10 @@ void cleanUp(int mode) // remove old files
     return;
 }
 
-void ccImage(void) // compress and convert to bits image
+void ccImage(void) // compress and convert to bits
 {
-    system("ffmpeg.exe -hide_banner -loglevel error -i underwater.png -q:v 5 -vf scale=360:-1 compressed.jpeg");
-    system("img2bin.exe compressed.jpeg");
+    system("ffmpeg.exe -hide_banner -loglevel error -i underwater.png -q:v 5 -vf scale=2:-1 compressed.jpeg"); // compress
+    system("img2bin.exe compressed.jpeg");                                                                     // convert to bits
     printf("Image converted to bits.\n");
     return;
 }
@@ -92,7 +92,7 @@ void makeAudio(int16_t *buf, long long int N)
     pclose(pipeout);
 }
 
-void makeAudioBuffer(int16_t *buf, char *input, long long int filelen)
+void makeAudioBuffer(int16_t *buf, char *input, long long int filelen, long long int N)
 {
     long long int n = 0; // buffer index
     int j = 0;           // bit array index
@@ -124,7 +124,6 @@ void makeAudioBuffer(int16_t *buf, char *input, long long int filelen)
             j++;
         }
     }
-
     printf("Audio buffer finished\n");
     return;
 }

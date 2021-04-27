@@ -9,6 +9,7 @@ int main(int argc, char *argv[])
     int c;
 
     fptr = fopen(argv[1], "rb");
+    //fptr = fopen("out.wav", "rb");
     txt = fopen("imagebin.txt", "w");
 
     if (fptr == NULL)
