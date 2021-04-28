@@ -7,5 +7,5 @@
 
 # Rx:
  - åbn hele mappen i visual studio code
- - brug extension "live server" for at åbne der som en server
+ - brug extension "live server" for at åbne det som en server
  - måske giver chrome ikke lov til at tilgå mic. bare tryk en masse gange på opdater så virker det måske
