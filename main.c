@@ -16,6 +16,8 @@ double sf = 88000.0; // sampling frequency
 double bd = 400 * 2; // duration of each bit (samples per bit)
 double freq = 880.0; // frequency of sine wave
 
+//hej
+
 int main(void)
 {
     int mode = 0; // 0 = No webcam | 1 = webcam
