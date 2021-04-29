@@ -78,7 +78,7 @@ void cleanUp(int mode) // remove old files
 
 void ccImage(void) // compress and convert to bits
 {
-    system("ffmpeg.exe -hide_banner -loglevel error -i underwater.png -q:v 5 -vf scale=2:-1 compressed.jpeg"); // compress
+    system("ffmpeg.exe -hide_banner -loglevel error -i underwater.png -q:v 5 -vf scale=360:-1 compressed.jpeg"); // compress
     system("img2bin.exe compressed.jpeg");                                                                     // convert to bits
     printf("Image converted to bits.\n");
     return;
@@ -96,7 +96,7 @@ void makeAudioBuffer(int16_t *buf, char *input, long long int filelen, long long
 {
     long long int n = 0; // buffer index
     int j = 0;           // bit array index
-
+    
     printf("Making audio buffer...");
     while (j < filelen) // loop - input
     {
