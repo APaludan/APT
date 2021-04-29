@@ -4,6 +4,7 @@
 #include <math.h>
 #include <string.h>
 #include <windows.h>
+#include <time.h>
 
 void printInfo(long long int N, char *input);
 void makeAudioBuffer(int16_t *buf, char *input, long long int filelen, long long int N);
@@ -58,9 +59,12 @@ int main(void)
         printf("Audio buffer memory allocation error");
         return 1;
     }
-
+    clock_t begin = clock();
     makeAudioBuffer(buf, input, filelen, N);
     makeAudio(buf, N);
+    clock_t end = clock();
+    double time_spend = (double) (end - begin) / CLOCKS_PER_SEC;
+    printf("Time spend making audio: %f\n", time_spend);
     printf("Transmitting...");
     system("out.wav"); // play audio in system standard media player. must open in media player that closed after play
     printf("Transmission finished\n");
