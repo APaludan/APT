@@ -15,7 +15,7 @@ int16_t calcSample(int n, int sub, double p2dsf);
 
 double amp = INT16_MAX - 1; // amplitude
 double sf = 88000.0;        // sampling frequency
-int bd = 400 * 6;           // duration of each bit (samples per bit)
+int bd = 400*6;           // duration of each bit (samples per bit)
 double freq = 880.0;        // frequency of sine wave
 
 int main(void)
@@ -51,7 +51,7 @@ int main(void)
     fread(input, filelen, 1, fp); // read binary file
     fclose(fp);
 
-    long long int N = (filelen * bd) * 1 / 5.5; // number of samples
+    long long int N = (filelen * bd/3.0); // number of samples
     printInfo(N, filelen);
 
     int16_t *buf = malloc(2 * (N + 1) * sizeof(int16_t)); // buffer
@@ -92,7 +92,7 @@ void cleanUp(int mode) // remove old files
 
 void ccImage(void) // compress and convert to bits
 {
-    system("ffmpeg.exe -hide_banner -loglevel error -i underwater.png -q:v 2 -vf scale=360:-1 compressed.jpeg"); // compress
+    system("ffmpeg.exe -hide_banner -loglevel error -i underwater.png -q:v 2 -vf scale=50:-1 compressed.jpeg"); // compress
     system("img2bin.exe compressed.jpeg");                                                                       // convert to bits
     printf("Image converted to bits.\n");
     return;
@@ -123,7 +123,6 @@ void makeAudioBuffer(int16_t *buf, char *input, long long int filelen)
             {
                 buf[n] = calcSample(n, 1, p2dsf);
             }
-            j += 3;
         }
         if (input[j] - '0' == 0 && input[j + 1] - '0' == 1 && input[j + 2] - '0' == 1) // 011
         {
@@ -131,7 +130,6 @@ void makeAudioBuffer(int16_t *buf, char *input, long long int filelen)
             {
                 buf[n] = calcSample(n, 2, p2dsf);
             }
-            j += 3;
         }
         if (input[j] - '0' == 1 && input[j + 1] - '0' == 0 && input[j + 2] - '0' == 1) // 101
         {
@@ -139,7 +137,6 @@ void makeAudioBuffer(int16_t *buf, char *input, long long int filelen)
             {
                 buf[n] = calcSample(n, 3, p2dsf);
             }
-            j += 3;
         }
         if (input[j] - '0' == 1 && input[j + 1] - '0' == 1 && input[j + 2] - '0' == 0) // 110
         {
@@ -147,7 +144,6 @@ void makeAudioBuffer(int16_t *buf, char *input, long long int filelen)
             {
                 buf[n] = calcSample(n, 4, p2dsf);
             }
-            j += 3;
         }
         if (input[j] - '0' == 0 && input[j + 1] - '0' == 0 && input[j + 2] - '0' == 1) // 001
         {
@@ -155,7 +151,6 @@ void makeAudioBuffer(int16_t *buf, char *input, long long int filelen)
             {
                 buf[n] = calcSample(n, 5, p2dsf);
             }
-            j += 3;
         }
         if (input[j] - '0' == 1 && input[j + 1] - '0' == 0 && input[j + 2] - '0' == 0) // 100
         {
@@ -163,7 +158,6 @@ void makeAudioBuffer(int16_t *buf, char *input, long long int filelen)
             {
                 buf[n] = calcSample(n, 6, p2dsf);
             }
-            j += 3;
         }
         if (input[j] - '0' == 0 && input[j + 1] - '0' == 0 && input[j + 2] - '0' == 0) // 000
         {
@@ -171,7 +165,6 @@ void makeAudioBuffer(int16_t *buf, char *input, long long int filelen)
             {
                 buf[n] = calcSample(n, 7, p2dsf);
             }
-            j += 3;
         }
         if (input[j] - '0' == 0 && input[j + 1] - '0' == 1 && input[j + 2] - '0' == 0) // 010
         {
@@ -179,12 +172,12 @@ void makeAudioBuffer(int16_t *buf, char *input, long long int filelen)
             {
                 buf[n] = calcSample(n, 8, p2dsf);
             }
-            j += 3;
         }
         else //if something is wrong just skip this character
         {
             j++;
         }
+        j += 3;
     }
 
     printf("Audio buffer finished\n");
