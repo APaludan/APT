@@ -3,10 +3,15 @@ let spec = [];
 let j = 0;
 var recording = false;
 
-document.getElementById("startpause").addEventListener("click", () => recording = !recording);
+document.getElementById("startpause").addEventListener("click", () => {
+    recording = !recording;
+    console.log(recording);
+    console.log(spec);
+});
 document.getElementById("reset").addEventListener("click", () => {
+    spec.length = 0;
     j = 0;
-    console.clear();
+    console.log(spec);
 });
 
 // runs once on page load
@@ -15,7 +20,7 @@ function setup() {
     mic.start();
     fft = new p5.FFT(0.01, 8192);
     fft.setInput(mic);
-    frameRate(60);
+    frameRate(1000);
 }
 
 // runs every frame - 60 times per second
@@ -36,7 +41,6 @@ function draw() {
     var loudestFreq = largestBin * (sampleRate() / numberOfBins);
     if (recording == true) {
         spec[j] = loudestFreq;
-        console.log(spec[j]);
         j++;
     }
 }

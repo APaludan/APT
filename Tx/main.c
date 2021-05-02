@@ -15,7 +15,7 @@ int16_t calcSample(int n, int sub, double p2dsf);
 
 double amp = INT16_MAX - 1; // amplitude
 double sf = 88000.0;        // sampling frequency
-int bd = 400 * 2;               // duration of each bit (samples per bit)
+int bd = 400 * 6;           // duration of each bit (samples per bit)
 double freq = 880.0;        // frequency of sine wave
 
 int main(void)
@@ -51,10 +51,10 @@ int main(void)
     fread(input, filelen, 1, fp); // read binary file
     fclose(fp);
 
-    long long int N = (filelen * bd) * 1/5.5; // number of samples
+    long long int N = (filelen * bd) * 1 / 5.5; // number of samples
     printInfo(N, filelen);
 
-    int16_t *buf = malloc(N * sizeof(int16_t)); // buffer
+    int16_t *buf = malloc(2 * (N + 1) * sizeof(int16_t)); // buffer
     if (buf == NULL)
     {
         printf("Audio buffer memory allocation error");
@@ -62,6 +62,14 @@ int main(void)
     }
     clock_t begin = clock();
     makeAudioBuffer(buf, input, filelen);
+    /*for (long int i = 0; i < N; i++)
+    {
+        if (buf[i] == 0)
+        {
+            buf[i] = 1;
+        }
+    }*/
+
     clock_t end = clock();
     makeAudio(buf, N);
 
@@ -103,11 +111,12 @@ void makeAudioBuffer(int16_t *buf, char *input, long long int filelen)
     long long int n = 0; // buffer index
     int j = 0;           // bit array index
     double p2dsf = 2.0 * M_PI / sf;
+    int e;
 
     printf("Making audio buffer...");
     while (j < filelen) // loop - input
     {
-        int e = n + bd;
+        e = n + bd;
         if (input[j] - '0' == 1 && input[j + 1] - '0' == 1 && input[j + 2] - '0' == 1) // 111
         {
             for (n = n; n < e; n++) // loop - audio buffer
@@ -178,6 +187,7 @@ void makeAudioBuffer(int16_t *buf, char *input, long long int filelen)
         }
     }
 
+    printf("Audio buffer finished\n");
     return;
 }
 
@@ -193,5 +203,6 @@ void printInfo(long long int N, int filelen)
 
 int16_t calcSample(int n, int sub, double p2dsf)
 {
-    return 16383.0 * sin(n * (freq * sub) * p2dsf);
+    int16_t sample = 16383.0 * sin(n * (freq * sub) * p2dsf);
+    return sample != 0 ? sample : 1;
 }
