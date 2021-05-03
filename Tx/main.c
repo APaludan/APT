@@ -15,7 +15,7 @@ int16_t calcSample(int n, int sub, double p2dsf);
 
 double amp = INT16_MAX - 1; // amplitude
 double sf = 88000.0;        // sampling frequency
-int bd = 400*5;           // duration of each bit (samples per bit)
+int bd = 400*5;             // duration of each bit (samples per bit)
 double freq = 880.0;        // frequency of sine wave
 
 int main(void)
@@ -115,7 +115,7 @@ void makeAudioBuffer(int16_t *buf, char *input, long long int filelen)
         {
             for (n = n; n < e; n++) // loop - audio buffer
             {
-                buf[n] = calcSample(n, 1, p2sf);
+                buf[n] = calcSample(n, 9, p2sf);
             }
         }
         if (input[j] - '0' == 0 && input[j + 1] - '0' == 1 && input[j + 2] - '0' == 1) // 011
