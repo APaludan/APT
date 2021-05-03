@@ -111,6 +111,7 @@ void makeAudioBuffer(int16_t *buf, char *input, long long int filelen)
     while (j < filelen) // loop - input
     {
         e = n + bd;
+        // evt lav om til en switch. Men test lige performance før push til main!!!!
         if (input[j] - '0' == 1 && input[j + 1] - '0' == 1 && input[j + 2] - '0' == 1) // 111
         {
             for (n = n; n < e; n++) // loop - audio buffer
