@@ -21,15 +21,16 @@ function setup() {
 
     mic = new p5.AudioIn();
     mic.start();
-    fft = new p5.FFT(0.01, 8192);
+    fft = new p5.FFT();
     fft.setInput(mic);
-    frameRate(1000);
+    //frameRate(1000);
 }
 
 // runs every frame - 60 times per second
 function draw() {
     background(200);
     var spectrum = fft.analyze(); // array of amplitudes in bins
+    drawSpectrum(spectrum);
     var numberOfBins = spectrum.length;
     var maxAmp = 0;
     var largestBin;
@@ -47,10 +48,10 @@ function draw() {
         spec[j] = loudestFreq;
         j++;
     }
-    drawSpectrum();
+    
 }
-function drawSpectrum(){
-    let spectrum = fft.analyze();
+function drawSpectrum(spectrum){
+    //let spectrum = fft.analyze();
 
     beginShape();
     for (i = 0; i < spectrum.length; i++) {
