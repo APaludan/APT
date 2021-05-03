@@ -38,7 +38,7 @@ function processReq(req, res) {
             console.log(req.url);
             switch (req.url) {
                 case "/":
-                    fileResponse(res, "index.html");
+                    fileResponse(res, "asd.html");
                     break;
                 default:
                     fileResponse(res, `${req.url}`)
