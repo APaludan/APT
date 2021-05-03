@@ -1,5 +1,5 @@
 # APT
-## SÅDAN KØRER DU DET!!!!:
+## SÅDAN KØRER DU DET!!!!
 ### Tx (Transmitter)
  - udpak ffmpeg.exe til Tx-mappen
  - måske ændre om der er webcam eller ej og webcam navn i main.c
