@@ -7,11 +7,11 @@
 #include <time.h>
 
 void printInfo(long int N, int filelen);
-void makeAudioBuffer(int16_t *buf, char *input, long int filelen);
+int makeAudioBuffer(int16_t *buf, char *input, long int filelen);
 void makeAudio(int16_t *buf, long int N);
 void cleanUp(int mode);
 void ccImage(void);
-void calcSamples(int16_t **samples);
+int calcSamples(int16_t **samples);
 
 double amp = INT16_MAX - 1; // amplitude
 double sf = 88000.0;        // sampling frequency
@@ -27,7 +27,7 @@ int main(void)
         system("ffmpeg.exe -hide_banner -loglevel error -f  dshow -y -i \"video=Lenovo EasyCamera\" -frames:v 1 underwater.png"); // capture picture with webcam
         Sleep(1000);                                                                                                              // wait for webcam capture
     }
-    ccImage();
+    ccImage(); // compress and convert image
 
     FILE *fp = fopen("imagebin.txt", "rb"); // open binary txt
     if (fp == NULL)
@@ -61,13 +61,20 @@ int main(void)
         return 1;
     }
     clock_t begin = clock();
-    makeAudioBuffer(buf, input, filelen);
+    if (makeAudioBuffer(buf, input, filelen) == 1)
+        return 1;
     free(input);
+
     clock_t end = clock();
-    makeAudio(buf, N);
-    free(buf);
     double time_spend = (double)(end - begin) / CLOCKS_PER_SEC; //
-    printf("\nTime spend calculating audio samples: %f\n", time_spend);
+    printf("Time to calculate audio samples: %f\n", time_spend);
+
+    makeAudio(buf, N);
+    clock_t end2 = clock();
+    time_spend = (double)(end2 - end) / CLOCKS_PER_SEC; //
+    printf("Time to make audio file with FFmpeg: %f\n", time_spend);
+
+    free(buf);
     printf("Transmitting...");
     system("out.flac"); // play audio in system standard media player. must open in media player that close after play
     printf("Transmission finished\n");
@@ -86,7 +93,7 @@ void cleanUp(int mode) // remove old files
 
 void ccImage(void) // compress and convert to bits
 {
-    system("ffmpeg.exe -hide_banner -loglevel error -i underwater.png -q:v 2 -vf scale=360:-1 compressed.jpeg"); // compress
+    system("ffmpeg.exe -hide_banner -loglevel error -i underwater.png -q:v 2 -vf scale=40:-1 compressed.jpeg"); // compress
     system("img2bin.exe compressed.jpeg");                                                                       // convert to bits
     printf("Image converted to bits.\n");
     return;
@@ -100,14 +107,18 @@ void makeAudio(int16_t *buf, long int N)
     pclose(pipeout);
 }
 
-void makeAudioBuffer(int16_t *buf, char *input, long int filelen)
+int makeAudioBuffer(int16_t *buf, char *input, long int filelen)
 {
     long int n = 0; // buffer index
     int j = 0;      // bit array index
 
     int e;
     int16_t *samples[10];
-    calcSamples(samples);
+    if (calcSamples(samples) == 1) //calculates matrix of samples
+    {
+        printf("Audio samples memory allocation error");
+        return 1;
+    }
 
     printf("Making audio buffer...");
     while (j < filelen) // loop - input
@@ -171,14 +182,13 @@ void makeAudioBuffer(int16_t *buf, char *input, long int filelen)
             }
         }
         else //if something is wrong just skip this character
-        {
             j++;
-        }
+
         j += 3;
     }
 
     printf("Audio buffer finished\n");
-    return;
+    return 0;
 }
 
 void printInfo(long int N, int filelen)
@@ -191,16 +201,19 @@ void printInfo(long int N, int filelen)
     printf("bps: %.0f\n", bps);
 }
 
-void calcSamples(int16_t **samples)
+int calcSamples(int16_t **samples)
 {
     double p2sf = 2.0 * M_PI / sf;
     for (int i = 1; i <= 9; i++)
     {
         samples[i] = malloc(bd * sizeof(int16_t));
+        if (samples[i] == NULL)
+            return 1;
+
         for (int j = 0; j < bd; j++)
         {
             samples[i][j] = 16383.0 * sin(j * (freq * i) * p2sf);
         }
     }
-    return;
+    return 0;
 }
