@@ -191,6 +191,5 @@ void printInfo(long long int N, int filelen)
 
 int16_t calcSample(int n, int sub, double p2dsf)
 {
-    int16_t sample = 16383.0 * sin(n * (freq * sub) * p2dsf);
-    return sample != 0 ? sample : 1;
+    return 16383.0 * sin(n * (freq * sub) * p2dsf);
 }
