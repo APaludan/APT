@@ -51,7 +51,7 @@ int main(void)
     fread(input, filelen, 1, fp); // read binary file
     fclose(fp);
 
-    long int N = filelen * bd / 3.8; // number of samples
+    long int N = filelen * bd / 2.95; // number of samples
     printInfo(N, filelen);
 
     int16_t *buf = malloc((N + 1) * sizeof(int16_t)); // buffer
@@ -66,12 +66,12 @@ int main(void)
     free(input);
 
     clock_t end = clock();
-    double time_spend = (double)(end - begin) / CLOCKS_PER_SEC; //
+    double time_spend = (double)(end - begin) / CLOCKS_PER_SEC;
     printf("Time to calculate audio samples: %f\n", time_spend);
 
     makeAudio(buf, N);
     clock_t end2 = clock();
-    time_spend = (double)(end2 - end) / CLOCKS_PER_SEC; //
+    time_spend = (double)(end2 - end) / CLOCKS_PER_SEC;
     printf("Time to make audio file with FFmpeg: %f\n", time_spend);
 
     free(buf);
@@ -111,7 +111,7 @@ int makeAudioBuffer(int16_t *buf, char *input, long int filelen)
 {
     long int n = 0; // buffer index
     int j = 0;      // bit array index
-
+    
     int e;
     int16_t *samples[10];
     if (calcSamples(samples) == 1) //calculates matrix of samples
@@ -132,49 +132,49 @@ int makeAudioBuffer(int16_t *buf, char *input, long int filelen)
                 buf[n] = samples[9][n % bd];
             }
         }
-        if (input[j] - '0' == 0 && input[j + 1] - '0' == 1 && input[j + 2] - '0' == 1) // 011
+        else if (input[j] - '0' == 0 && input[j + 1] - '0' == 1 && input[j + 2] - '0' == 1) // 011
         {
             for (n = n; n < e; n++) // loop - audio buffer
             {
                 buf[n] = samples[8][n % bd];
             }
         }
-        if (input[j] - '0' == 1 && input[j + 1] - '0' == 0 && input[j + 2] - '0' == 1) // 101
+        else if (input[j] - '0' == 1 && input[j + 1] - '0' == 0 && input[j + 2] - '0' == 1) // 101
         {
             for (n = n; n < e; n++) // loop - audio buffer
             {
                 buf[n] = samples[7][n % bd];
             }
         }
-        if (input[j] - '0' == 1 && input[j + 1] - '0' == 1 && input[j + 2] - '0' == 0) // 110
+        else if (input[j] - '0' == 1 && input[j + 1] - '0' == 1 && input[j + 2] - '0' == 0) // 110
         {
             for (n = n; n < e; n++) // loop - audio buffer
             {
                 buf[n] = samples[6][n % bd];
             }
         }
-        if (input[j] - '0' == 0 && input[j + 1] - '0' == 0 && input[j + 2] - '0' == 1) // 001
+        else if (input[j] - '0' == 0 && input[j + 1] - '0' == 0 && input[j + 2] - '0' == 1) // 001
         {
             for (n = n; n < e; n++) // loop - audio buffer
             {
                 buf[n] = samples[5][n % bd];
             }
         }
-        if (input[j] - '0' == 1 && input[j + 1] - '0' == 0 && input[j + 2] - '0' == 0) // 100
+        else if (input[j] - '0' == 1 && input[j + 1] - '0' == 0 && input[j + 2] - '0' == 0) // 100
         {
             for (n = n; n < e; n++) // loop - audio buffer
             {
                 buf[n] = samples[4][n % bd];
             }
         }
-        if (input[j] - '0' == 0 && input[j + 1] - '0' == 0 && input[j + 2] - '0' == 0) // 000
+        else if (input[j] - '0' == 0 && input[j + 1] - '0' == 0 && input[j + 2] - '0' == 0) // 000
         {
             for (n = n; n < e; n++) // loop - audio buffer
             {
                 buf[n] = samples[3][n % bd];
             }
         }
-        if (input[j] - '0' == 0 && input[j + 1] - '0' == 1 && input[j + 2] - '0' == 0) // 010
+        else if (input[j] - '0' == 0 && input[j + 1] - '0' == 1 && input[j + 2] - '0' == 0) // 010
         {
             for (n = n; n < e; n++) // loop - audio buffer
             {
