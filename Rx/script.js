@@ -79,8 +79,6 @@ function setup() {
     fft = new p5.FFT();
     fft.setInput(mic);
 }
-44000
-0 - 22000
 
 // runs every frame - 60 times per second
 function draw() {
