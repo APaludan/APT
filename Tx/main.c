@@ -14,25 +14,26 @@ void ccImage(void);
 int calcSamples(int16_t **samples);
 
 double amp = INT16_MAX - 1; // amplitude
-double sf = 88000.0;        // sampling frequency
-int bd = 400 * 5;           // duration of each bit (samples per bit)
-double freq = 880.0;        // frequency of sine wave
+double sf = 44000.0;        // sampling frequency
+int bd = 100 * 100;         // duration of each bit (samples per bit)
+double freq = 440.0;        // frequency of sine wave
 
 int main(void)
 {
     int mode = 0; // 0 = No webcam | 1 = webcam
-    cleanUp(mode);
+    //cleanUp(mode);
     if (mode == 1)
     {
         system("ffmpeg.exe -hide_banner -loglevel error -f  dshow -y -i \"video=Lenovo EasyCamera\" -frames:v 1 underwater.png"); // capture picture with webcam
         Sleep(1000);                                                                                                              // wait for webcam capture
     }
-    ccImage(); // compress and convert image
+    //ccImage(); // compress and convert image
 
     FILE *fp = fopen("imagebin.txt", "rb"); // open binary txt
     if (fp == NULL)
     {
         Sleep(1000); // if file doesnt exist, wait additional 1 sec. maybe pc is slow
+        fp = fopen("imagebin.txt", "rb");
         if (fp == NULL)
         {
             printf("Could not open file.");
@@ -51,10 +52,10 @@ int main(void)
     fread(input, filelen, 1, fp); // read binary file
     fclose(fp);
 
-    long int N = filelen * bd / 2.95; // number of samples
+    long int N = 2 * filelen * bd / 2.95; // number of samples
     printInfo(N, filelen);
 
-    int16_t *buf = malloc((N + 1) * sizeof(int16_t)); // buffer
+    int16_t *buf = malloc(3 * (N + 1) * sizeof(int16_t)); // buffer
     if (buf == NULL)
     {
         printf("Audio buffer memory allocation error");
@@ -94,7 +95,7 @@ void cleanUp(int mode) // remove old files
 void ccImage(void) // compress and convert to bits
 {
     system("ffmpeg.exe -hide_banner -loglevel error -i underwater.png -q:v 2 -vf scale=40:-1 compressed.jpeg"); // compress
-    system("img2bin.exe compressed.jpeg");                                                                       // convert to bits
+    system("img2bin.exe compressed.jpeg");                                                                      // convert to bits
     printf("Image converted to bits.\n");
     return;
 }
@@ -102,7 +103,7 @@ void ccImage(void) // compress and convert to bits
 void makeAudio(int16_t *buf, long int N)
 {
     // Pipe the audio data to ffmpeg, which writes it to a wav file
-    FILE *pipeout = popen("ffmpeg.exe -hide_banner -loglevel error -y -f s16le -acodec pcm_s16le -vn -ar 88000 -ac 1 -i - out.flac", "w");
+    FILE *pipeout = popen("ffmpeg.exe -hide_banner -loglevel error -y -f s16le -acodec pcm_s16le -vn -ar 44000 -ac 1 -i - out.flac", "w");
     fwrite(buf, 2, N, pipeout);
     pclose(pipeout);
 }
@@ -111,32 +112,37 @@ int makeAudioBuffer(int16_t *buf, char *input, long int filelen)
 {
     long int n = 0; // buffer index
     int j = 0;      // bit array index
-    
+
     int e;
-    int16_t *samples[10];
+    int16_t *samples[11];
     if (calcSamples(samples) == 1) //calculates matrix of samples
     {
         printf("Audio samples memory allocation error");
         return 1;
     }
 
+    e += bd;
+    for (n; n < e; n++) // loop - audio buffer
+    {
+        buf[n] = samples[1][n % bd];
+    }
     printf("Making audio buffer...");
     while (j < filelen) // loop - input
     {
-        e = n + bd;
+        e += bd;
         // evt lav om til en switch. Men test lige performance før push til main!!!!
         if (input[j] - '0' == 1 && input[j + 1] - '0' == 1 && input[j + 2] - '0' == 1) // 111
         {
             for (n = n; n < e; n++) // loop - audio buffer
             {
-                buf[n] = samples[9][n % bd];
+                buf[n] = samples[10][n % bd];
             }
         }
         else if (input[j] - '0' == 0 && input[j + 1] - '0' == 1 && input[j + 2] - '0' == 1) // 011
         {
             for (n = n; n < e; n++) // loop - audio buffer
             {
-                buf[n] = samples[8][n % bd];
+                buf[n] = samples[9][n % bd];
             }
         }
         else if (input[j] - '0' == 1 && input[j + 1] - '0' == 0 && input[j + 2] - '0' == 1) // 101
@@ -181,8 +187,14 @@ int makeAudioBuffer(int16_t *buf, char *input, long int filelen)
                 buf[n] = samples[2][n % bd];
             }
         }
-        else //if something is wrong just skip this character
+        else
             j++;
+
+        e += bd;
+        for (n; n < e; n++) // loop - audio buffer
+        {
+            buf[n] = samples[1][n % bd];
+        }
 
         j += 3;
     }
@@ -204,7 +216,7 @@ void printInfo(long int N, int filelen)
 int calcSamples(int16_t **samples)
 {
     double p2sf = 2.0 * M_PI / sf;
-    for (int i = 1; i <= 9; i++)
+    for (int i = 1; i <= 10; i++)
     {
         samples[i] = malloc(bd * sizeof(int16_t));
         if (samples[i] == NULL)
