@@ -52,7 +52,7 @@ int main(void)
     fread(input, filelen, 1, fp); // read binary file
     fclose(fp);
 
-    long int N = filelen * bd / 2.95; // number of samples
+    long int N = 2 * filelen * bd / 2.95; // number of samples
     printInfo(N, filelen);
 
     int16_t *buf = malloc(3 * (N + 1) * sizeof(int16_t)); // buffer
@@ -187,6 +187,8 @@ int makeAudioBuffer(int16_t *buf, char *input, long int filelen)
                 buf[n] = samples[2][n % bd];
             }
         }
+        else
+            j++;
 
         e += bd;
         for (n; n < e; n++) // loop - audio buffer

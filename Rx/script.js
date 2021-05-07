@@ -13,7 +13,7 @@ function compare(x, min, max) {
         return false;
 }
 
-function isValidIndex(freq) {
+function isValidFreq(freq) {
     for (let i = 0; i < validFreqs.length; i++) {
         if (compare(freq, validFreqs[i] - 40, validFreqs[i] + 40)) {
             return validFreqs[i];
@@ -39,22 +39,23 @@ document.getElementById("startpause").addEventListener("click", () => {
     let identifiedFreqs = [];
     let bitstring = '';
     if (!recording) {
-        while (spec.length > 0) {
-            console.log(spec);
-            console.log(identifiedFreqs);
-            console.log("0: " + spec.length);
-            while (!compare(spec[0], 400, 480)) {
-                console.log("1: " + spec.length);
+        while (!compare(spec[0], 400, 480)) {
+             spec.shift();
+        }
+        while (spec.length > 1) {
+            while (!isValidFreq(spec[0])) {
                 spec.shift();
             }
             while (compare(spec[0], 400, 480)) {
-                console.log("2: " + spec.length + " spec0: " + spec[0] + " spec1: " + spec[1]);
                 spec.shift();
             }
-            if (isValidIndex(spec[0])) {
-                console.log("3: " + spec.length);
-                identifiedFreqs.push(isValidIndex(spec[0]));
+            let prev = spec[0];
+            if (isValidFreq(spec[0])) {
+                identifiedFreqs.push(isValidFreq(spec[0]));
                 bitstring += freqToBits(identifiedFreqs[identifiedFreqs.length - 1]);
+            }
+            while (compare(spec[0], prev - 40, prev + 40)) {
+                spec.shift();
             }
         }
         console.log(identifiedFreqs);
@@ -65,7 +66,7 @@ document.getElementById("startpause").addEventListener("click", () => {
 document.getElementById("reset").addEventListener("click", () => {
     spec.length = 0;
     j = 0;
-    console.log(spec);
+    console.log("reset!");
 });
 
 // runs once on page load
