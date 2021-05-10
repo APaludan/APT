@@ -23,12 +23,6 @@ function processReq(req, res) {
     switch (req.method) {
         case "POST":
             switch (req.url) {
-                case "/notspy":
-                    // det virker sådan her: https://nodejs.dev/learn/get-http-request-body-data-using-nodejs
-                    req.on('data', data => console.log("mouse on:", JSON.parse(data).mouseon));
-                    res.statusCode = 200;
-                    res.end();
-                    break;
                 default:
                     res.writeHead(500);
                     res.end();

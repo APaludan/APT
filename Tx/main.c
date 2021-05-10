@@ -21,13 +21,13 @@ double freq = 440.0;        // frequency of sine wave
 int main(void)
 {
     int mode = 0; // 0 = No webcam | 1 = webcam
-    //cleanUp(mode);
+    cleanUp(mode);
     if (mode == 1)
     {
         system("ffmpeg.exe -hide_banner -loglevel error -f  dshow -y -i \"video=Lenovo EasyCamera\" -frames:v 1 underwater.png"); // capture picture with webcam
         Sleep(1000);                                                                                                              // wait for webcam capture
     }
-    //ccImage(); // compress and convert image
+    ccImage(); // compress and convert image
 
     FILE *fp = fopen("imagebin.txt", "rb"); // open binary txt
     if (fp == NULL)
@@ -94,7 +94,7 @@ void cleanUp(int mode) // remove old files
 
 void ccImage(void) // compress and convert to bits
 {
-    system("ffmpeg.exe -hide_banner -loglevel error -i underwater.png -q:v 2 -vf scale=40:-1 compressed.jpeg"); // compress
+    system("ffmpeg.exe -hide_banner -loglevel error -i underwater.png -q:v 2 -vf scale=360:-1 compressed.jpeg"); // compress
     system("img2bin.exe compressed.jpeg");                                                                      // convert to bits
     printf("Image converted to bits.\n");
     return;
@@ -112,7 +112,6 @@ int makeAudioBuffer(int16_t *buf, char *input, long int filelen)
 {
     long int n = 0; // buffer index
     int j = 0;      // bit array index
-
     int e;
     int16_t *samples[11];
     if (calcSamples(samples) == 1) //calculates matrix of samples
@@ -122,15 +121,15 @@ int makeAudioBuffer(int16_t *buf, char *input, long int filelen)
     }
 
     e += bd;
-    for (n; n < e; n++) // loop - audio buffer
+    for (n; n < e; n++) // wake-up tone
     {
         buf[n] = samples[1][n % bd];
     }
     printf("Making audio buffer...");
-    while (j < filelen) // loop - input
+    while (j < filelen - 2) // loop - input
     {
         e += bd;
-        // evt lav om til en switch. Men test lige performance før push til main!!!!
+        // evt lav om til en switch
         if (input[j] - '0' == 1 && input[j + 1] - '0' == 1 && input[j + 2] - '0' == 1) // 111
         {
             for (n = n; n < e; n++) // loop - audio buffer
@@ -191,7 +190,7 @@ int makeAudioBuffer(int16_t *buf, char *input, long int filelen)
             j++;
 
         e += bd;
-        for (n; n < e; n++) // loop - audio buffer
+        for (n; n < e; n++) // seperator tone
         {
             buf[n] = samples[1][n % bd];
         }

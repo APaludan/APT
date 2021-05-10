@@ -6,11 +6,7 @@ const validFreqs = [440, 880, 1320, 1760, 2200, 2640, 3080, 3520, 3960, 4400];
 const bits = ['', '010', '000', '100', '001', '110', '101', '', '011', '111'];
 
 function compare(x, min, max) {
-    if (x > min && x < max) {
-        return true;
-    }
-    else
-        return false;
+    return x > min && x < max;
 }
 
 function isValidFreq(freq) {
@@ -28,13 +24,13 @@ function freqToBits (freq) {
             return bits[i];
         }
     }
-    return 'nej';
+    return '';
 }
 
 
 document.getElementById("startpause").addEventListener("click", () => {
     recording = !recording;
-    console.log(recording);
+    console.log("recording: " + recording);
     console.log(spec);
     let identifiedFreqs = [];
     let bitstring = '';
@@ -97,7 +93,7 @@ function draw() {
         }
     }
 
-    var loudestFreq = largestBin * (sampleRate() / numberOfBins) / 2;
+    var loudestFreq = largestBin * (sampleRate() / numberOfBins) / 2; //læs om nyquist frequency 
     if (recording == true) {
         spec[j] = loudestFreq;
         j++;
