@@ -70,12 +70,12 @@ function setup() {
     createCanvas(1000, 600);
     noFill();
 
+    // P5: https://p5js.org/examples/sound-frequency-spectrum.html 
     mic = new p5.AudioIn();
     mic.start();
     fft = new p5.FFT();
     fft.setInput(mic);
 }
-
 // runs every frame - 60 times per second
 function draw() {
     background(200);
