@@ -95,7 +95,7 @@ void cleanUp(int mode) // remove old files
 void ccImage(void) // compress and convert to bits
 {
     system("ffmpeg.exe -hide_banner -loglevel error -i underwater.png -q:v 2 -vf scale=360:-1 compressed.jpeg"); // compress
-    system("img2bin.exe compressed.jpeg"); //kilde: https://stackoverflow.com/questions/32527351/conversion-of-image-binary-image-using-c  // convert to bits
+    system("img2bin.exe compressed.jpeg"); // source: https://stackoverflow.com/questions/32527351/conversion-of-image-binary-image-using-c  // convert to bits
     printf("Image converted to bits.\n");
     return;
 }
@@ -103,12 +103,13 @@ void ccImage(void) // compress and convert to bits
 void makeAudio(int16_t *buf, long int N)
 {
     // Pipe the audio data to ffmpeg, which writes it to a wav file
+    // source: https://p5js.org/examples/sound-frequency-spectrum.html 
     FILE *pipeout = popen("ffmpeg.exe -hide_banner -loglevel error -y -f s16le -acodec pcm_s16le -vn -ar 44000 -ac 1 -i - out.flac", "w");
     fwrite(buf, 2, N, pipeout);
     pclose(pipeout);
 }
 
-// kilde: https://batchloaf.wordpress.com/2017/02/10/a-simple-way-to-read-and-write-audio-and-video-files-in-c-using-ffmpeg/ 
+// source: https://batchloaf.wordpress.com/2017/02/10/a-simple-way-to-read-and-write-audio-and-video-files-in-c-using-ffmpeg/ 
 int makeAudioBuffer(int16_t *buf, char *input, long int filelen)
 {
     long int n = 0; // buffer index
