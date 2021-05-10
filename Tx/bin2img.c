@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <conio.h>
+//kilde: https://stackoverflow.com/questions/32527351/conversion-of-image-binary-image-using-c 
+
 
 //The following function converts the ones and zeroes in the text file into a character.
 //For example the text file may have the 8 consecutive characters '1', '0', '0', '0', '1', '0', '0', '0'.

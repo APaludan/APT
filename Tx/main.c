@@ -23,7 +23,7 @@ int main(void)
     int mode = 0; // 0 = No webcam | 1 = webcam
     cleanUp(mode);
     if (mode == 1)
-    {
+    {   // documentation for FFmpeg: https://ffmpeg.org/ffmpeg.html 
         system("ffmpeg.exe -hide_banner -loglevel error -f  dshow -y -i \"video=Lenovo EasyCamera\" -frames:v 1 underwater.png"); // capture picture with webcam
         Sleep(1000);                                                                                                              // wait for webcam capture
     }
@@ -95,7 +95,7 @@ void cleanUp(int mode) // remove old files
 void ccImage(void) // compress and convert to bits
 {
     system("ffmpeg.exe -hide_banner -loglevel error -i underwater.png -q:v 2 -vf scale=360:-1 compressed.jpeg"); // compress
-    system("img2bin.exe compressed.jpeg");                                                                      // convert to bits
+    system("img2bin.exe compressed.jpeg"); //kilde: https://stackoverflow.com/questions/32527351/conversion-of-image-binary-image-using-c  // convert to bits
     printf("Image converted to bits.\n");
     return;
 }
@@ -108,6 +108,7 @@ void makeAudio(int16_t *buf, long int N)
     pclose(pipeout);
 }
 
+// kilde: https://batchloaf.wordpress.com/2017/02/10/a-simple-way-to-read-and-write-audio-and-video-files-in-c-using-ffmpeg/ 
 int makeAudioBuffer(int16_t *buf, char *input, long int filelen)
 {
     long int n = 0; // buffer index

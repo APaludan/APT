@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <conio.h>
 
+//kilde: https://stackoverflow.com/questions/32527351/conversion-of-image-binary-image-using-c 
 int main(int argc, char *argv[])
 {
     //clrscr();
