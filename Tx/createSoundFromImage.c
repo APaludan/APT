@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
 	
 	printf("TEST 2");
 	//Converts binary text file to sound
-	system("binary2sound.exe -output ../tempFiles/tmpSound.flac -modulationScheme 8fsk");
+	system("binary2sound.exe -modulationScheme bfsk");
 
 	printf("TEST 3");
 
