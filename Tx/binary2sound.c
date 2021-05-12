@@ -78,6 +78,11 @@ int _8fsk()
   fclose(binaryFilePtr); //and closes file when done
 
   long int N = 2 * binaryFileLen * bitDuration / 2.95; //number of samples
+  /*
+  - Each 1/0 is represented by a sound, that sound consists of bitDuration samples (binaryfilelen * bitduration)
+  - 3 bits pr sound therefore divided by 2.95, almost 3
+  - We want a tone between every "bit tone" therefore 2*
+  */
 
   int16_t *buffer = malloc(3 * (N + 1) * sizeof(int16_t)); //buffer array
   if (buffer == NULL)
@@ -194,7 +199,7 @@ int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int binaryFileLen, 
 
     e += bitDuration;
     for (n; n < e; n++) // end-tone, takes the first sine wave sample value
-                        // and add them to the buffer array
+                        // and add them to end of the buffer array
     {
       buffer[n] = samples[1][n % bitDuration];
     }
