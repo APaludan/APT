@@ -23,15 +23,11 @@ int main(int argc, char *argv[])
 	//Compress image
 	if(CompressImage()) return 1;
 
-	printf("TEST 1");
 	//Converts image file to binary text file
 	system("image2binary.exe ../tempFiles/tempImage_compressed.jpeg ../tempFiles/tempBinary.txt");
 	
-	printf("TEST 2");
 	//Converts binary text file to sound
 	system("binary2sound.exe -modulationScheme 8fsk");
-
-	printf("TEST 3");
 
   return 0;
 }
