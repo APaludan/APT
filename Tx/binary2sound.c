@@ -94,7 +94,7 @@ int _8fsk()
   free(buffer);
   /*
   printf("Transmitting...");
-  system("out.flac"); // play audio in system standard media player. must open in media player that close after play
+  system("../tempFiles/imageAudio.flac"); // play audio in system standard media player. must open in media player that close after play
   printf("Transmission finished\n");
   */
 
