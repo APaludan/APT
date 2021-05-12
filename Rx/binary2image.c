@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <math.h>
 
-//RET VARIABEL NAVNE OG FILSTIER + FILNAVNE -> så det virker med resten af programmet 
+//RET VARIABEL NAVNE OG FIL STIER + FILNAVNE -> så det virker med resten af programmet 
 
 int read_binary_data(){
   char *binary_bytes, c;

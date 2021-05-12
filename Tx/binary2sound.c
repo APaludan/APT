@@ -8,7 +8,7 @@
 
 //Modulation functions
 int _8fsk();
-int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int binaryFileLen);
+int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int binaryFileLen, int bitDuration);
 void makeAudio(int16_t *buffer, long int N);
 int calcSamples(int16_t **samples, int bitDuration);
 
@@ -86,7 +86,7 @@ int _8fsk()
     return 1;
   }     
 
-  if (makeAudioBuffer(buffer, binaryBytes, binaryFileLen))
+  if (makeAudioBuffer(buffer, binaryBytes, binaryFileLen, bitDuration))
     return 1;
     free(binaryBytes);
 
@@ -102,14 +102,13 @@ int _8fsk()
   return 0;
 }
 
-int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int binaryFileLen)
+int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int binaryFileLen, int bitDuration)
 {
   long int n = 0; // buffer index
-  int j = 0, e,     // bit array index
-      bitDuration = 100 * 100; // duration of each bit (samples per bit)
+  int j = 0, e = bitDuration;    // bit array index
 
   int16_t *samples[11];
-  if (calcSamples(samples, bitDuration) == 1) //calculates matrix of samples
+  if (calcSamples(samples, bitDuration)) //calculates matrix of samples
   {
     printf("Audio samples memory allocation error");
     return 1;
