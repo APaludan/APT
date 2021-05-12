@@ -47,7 +47,6 @@ int main(int argc, char *argv[])
 
 int _8fsk()
 {
-	//Add old code(Andreas) and new code(Emilie) here.
   char *binaryBytes, c;
   int index = 0, 
       bitDuration = 100 * 100; // duration of each bit (samples per bit)
@@ -78,7 +77,7 @@ int _8fsk()
 
   long int N = 2 * binaryFileLen * bitDuration / 2.95; //number of samples
 
-  int16_t *buffer = malloc(3 * (N + 1) * sizeof(int16_t)); //buffer array, beskriv
+  int16_t *buffer = malloc(3 * (N + 1) * sizeof(int16_t)); //buffer array
   if (buffer == NULL)
   {
     printf("Audio buffer memory allocation error");
@@ -117,67 +116,75 @@ int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int binaryFileLen)
   }
 
   e += bitDuration;
-  for (n; n < e; n++) // loop - audio buffer
+  for (n; n < e; n++) // Wake-up tone, takes the first sine wave sample value
+                      // and add them to the start of the buffer array
   {
     buffer[n] = samples[1][n % bitDuration];
   }
   printf("Making audio buffer...");
-  while (j < binaryFileLen) // loop - input
+  while (j < binaryFileLen) 
   {
     e += bitDuration;
-    // evt lav om til en switch. Men test lige performance før push til main!!!!
+    //Checks for a certain combination of bits
+    //if the combination is true *
     if (binaryBytes[j] - '0' == 1 && binaryBytes[j + 1] - '0' == 1 && binaryBytes[j + 2] - '0' == 1) // 111
     {
+      //* go through the samples array, where the sine waves sample values are stored.
+      //add those values to the buffer.
       for (n = n; n < e; n++) // loop - audio buffer
       {
-        buffer[n] = samples[10][n % bitDuration];
+        buffer[n] = samples[10][n % bitDuration]; //by doing n % bitDuration will always zero the value so
+                                                  //even if n is higher than the array size
+                                                  //it will never make an error.
+                                                  //fx. n = 10000   -> 10000 % 10000 = 0 -> 19999 % 10000 = 9999
+                                                  //fx. n = 30000   -> 30000 % 10000 = 0 -> 39999 % 10000 = 9999
       }
     }
     else if (binaryBytes[j] - '0' == 0 && binaryBytes[j + 1] - '0' == 1 && binaryBytes[j + 2] - '0' == 1) // 011
     {
-      for (n = n; n < e; n++) // loop - audio buffer
+      for (n = n; n < e; n++) 
       {
         buffer[n] = samples[9][n % bitDuration];
       }
     }
     else if (binaryBytes[j] - '0' == 1 && binaryBytes[j + 1] - '0' == 0 && binaryBytes[j + 2] - '0' == 1) // 101
     {
-      for (n = n; n < e; n++) // loop - audio buffer
+      for (n = n; n < e; n++) 
       {
         buffer[n] = samples[7][n % bitDuration];
       }
     }
     else if (binaryBytes[j] - '0' == 1 && binaryBytes[j + 1] - '0' == 1 && binaryBytes[j + 2] - '0' == 0) // 110
     {
-      for (n = n; n < e; n++) // loop - audio buffer
+      for (n = n; n < e; n++) 
       {
         buffer[n] = samples[6][n % bitDuration];
       }
     }
     else if (binaryBytes[j] - '0' == 0 && binaryBytes[j + 1] - '0' == 0 && binaryBytes[j + 2] - '0' == 1) // 001
     {
-      for (n = n; n < e; n++) // loop - audio buffer
+      for (n = n; n < e; n++) 
       {
         buffer[n] = samples[5][n % bitDuration];
       }
     }
     else if (binaryBytes[j] - '0' == 1 && binaryBytes[j + 1] - '0' == 0 && binaryBytes[j + 2] - '0' == 0) // 100
     {
-      for (n = n; n < e; n++) // loop - audio buffer
+      for (n = n; n < e; n++) 
       {
         buffer[n] = samples[4][n % bitDuration];
       }
     }
     else if (binaryBytes[j] - '0' == 0 && binaryBytes[j + 1] - '0' == 0 && binaryBytes[j + 2] - '0' == 0) // 000
     {
-      for (n = n; n < e; n++) // loop - audio buffer
+      for (n = n; n < e; n++) 
       {
         buffer[n] = samples[3][n % bitDuration];
       }
     }
     else if (binaryBytes[j] - '0' == 0 && binaryBytes[j + 1] - '0' == 1 && binaryBytes[j + 2] - '0' == 0) // 010
     {
-      for (n = n; n < e; n++) // loop - audio buffer
+      for (n = n; n < e; n++) 
       {
         buffer[n] = samples[2][n % bitDuration];
       }
@@ -186,7 +193,8 @@ int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int binaryFileLen)
       j++;
 
     e += bitDuration;
-    for (n; n < e; n++) // loop - audio buffer
+    for (n; n < e; n++) // end-tone, takes the first sine wave sample value
+                        // and add them to the start of the buffer array
     {
       buffer[n] = samples[1][n % bitDuration];
     }
@@ -221,7 +229,7 @@ int calcSamples(int16_t **samples)
 
 void makeAudio(int16_t *buffer, long int N)
 {
-  // Pipe the audio data to ffmpeg, which writes it to a wav file
+  // Pipe the audio data to ffmpeg, which writes it to an audio file (wav/flac..)
   FILE *audioPtr = popen("ffmpeg.exe -hide_banner -loglevel error -y -f s16le -acodec pcm_s16le -vn -ar 44000 -ac 1 -i - ../tempFiles/imageAudio.flac", "w");
     fwrite(buffer, 2, N, audioPtr);
     pclose(audioPtr);
