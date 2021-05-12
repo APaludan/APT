@@ -1,10 +1,10 @@
-let mic, fft;
-let spec = [];
-let j = 0;
-var recording = false;
+//Global variables ooops 
+let mic, fft, spec = [],  j = 0, recording = false;
 const validFreqs = [440, 880, 1320, 1760, 2200, 2640, 3080, 3520, 3960, 4400];
 const bits = ['', '010', '000', '100', '001', '110', '101', '', '011', '111'];
 
+//This function compare the x to the min and the max value
+//it returns true is x i within the limit, else false
 function compare(x, min, max) {
   if (x > min && x < max) {
     return true;
@@ -13,6 +13,9 @@ function compare(x, min, max) {
     return false;
 }
 
+//This function checks whether the detected sound has a valid frequency
+//Should be within the validFreqs array (with a +/-40 margin)
+//Returns false or the valid frequency
 function isValidFreq(freq) {
   for (let i = 0; i < validFreqs.length; i++) {
     if (compare(freq, validFreqs[i] - 40, validFreqs[i] + 40)) {
@@ -22,6 +25,7 @@ function isValidFreq(freq) {
   return false;
 }
 
+//This
 function freqToBits(freq) {
   for (let i = 0; i < validFreqs.length; i++) {
     if (validFreqs[i] === freq) {
