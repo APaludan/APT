@@ -190,8 +190,7 @@ int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int binaryFileLen)
     {
       buffer[n] = samples[1][n % bitDuration];
     }
-
-    j += 3;
+      j += 3;
   }
 
   printf("Audio buffer finished\n");
