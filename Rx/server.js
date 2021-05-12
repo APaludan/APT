@@ -1,3 +1,5 @@
+//Server source: Yatzy server from the IWP course
+
 const http = require('http');
 const fs = require("fs");
 const path = require("path");
@@ -24,10 +26,6 @@ function processReq(req, res) {
         case "POST":
             switch (req.url) {
                 case "/notspy":
-                    // det virker sådan her: https://nodejs.dev/learn/get-http-request-body-data-using-nodejs
-                    req.on('data', data => console.log("mouse on:", JSON.parse(data).mouseon));
-                    res.statusCode = 200;
-                    res.end();
                     break;
                 default:
                     res.writeHead(500);
