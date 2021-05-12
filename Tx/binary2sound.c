@@ -10,7 +10,7 @@
 int _8fsk();
 int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int binaryFileLen);
 void makeAudio(int16_t *buffer, long int N);
-int calcSamples(int16_t **samples);
+int calcSamples(int16_t **samples, int bitDuration);
 
 //int _bfsk();
 
@@ -105,13 +105,11 @@ int _8fsk()
 int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int binaryFileLen)
 {
   long int n = 0; // buffer index
-  int j = 0,     // bit array index
+  int j = 0, e,     // bit array index
       bitDuration = 100 * 100; // duration of each bit (samples per bit)
 
-  int e = bitDuration; //beskriv end of ..
-
   int16_t *samples[11];
-  if (calcSamples(samples) == 1) //calculates matrix of samples
+  if (calcSamples(samples, bitDuration) == 1) //calculates matrix of samples
   {
     printf("Audio samples memory allocation error");
     return 1;
@@ -206,11 +204,10 @@ int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int binaryFileLen)
   return 0;
 }
 
-int calcSamples(int16_t **samples)
+int calcSamples(int16_t **samples, int bitDuration)
 {
   double amp = 16383.0; // amplitude
   double f_s = 44000.0;        // sampling frequency
-  int bitDuration = 100 * 100;         // duration of each bit (samples per bit)
   double freq = 440.0;        // frequency of sine wave
 
   double p2sf = 2.0 * M_PI / f_s;
