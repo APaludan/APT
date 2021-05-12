@@ -99,6 +99,7 @@ int main(int argc, char *argv[])
 }
 
 /*
+Source: https://stackoverflow.com/questions/32527351/conversion-of-image-binary-image-using-c
 char = 1byte = 8bits (0000 0000)
 
 (char & (1 << (7 - i)))

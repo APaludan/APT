@@ -102,6 +102,7 @@ int _8fsk()
   return 0;
 }
 
+// source: https://batchloaf.wordpress.com/2017/02/10/a-simple-way-to-read-and-write-audio-and-video-files-in-c-using-ffmpeg/ 
 int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int binaryFileLen, int bitDuration)
 {
   long int n = 0; // buffer index

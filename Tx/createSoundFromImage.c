@@ -26,6 +26,8 @@ int main(int argc, char *argv[])
 	//Compress image
 	if(CompressImage()) return 1;
 
+	//documentation for FFmpeg: https://ffmpeg.org/ffmpeg.html 
+
 	//Converts image file to binary text file
 	system("image2binary.exe ../tempFiles/tempImage_compressed.jpeg ../tempFiles/tempBinary.txt");
 	
