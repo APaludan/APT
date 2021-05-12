@@ -4,6 +4,8 @@
 #include <stdint.h>
 #include <math.h>
 
+//RET VARIABEL NAVNE OG FILSTIER + FILNAVNE -> så det virker med resten af programmet 
+
 int read_binary_data(){
   char *binary_bytes, c;
   int i, index = 0, bt_index = 0,
