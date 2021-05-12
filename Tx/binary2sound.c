@@ -207,7 +207,7 @@ int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int binaryFileLen)
 
 int calcSamples(int16_t **samples)
 {
-  double amp = INT16_MAX - 1; // amplitude
+  double amp = 16383.0; // amplitude
   double f_s = 44000.0;        // sampling frequency
   int bitDuration = 100 * 100;         // duration of each bit (samples per bit)
   double freq = 440.0;        // frequency of sine wave
@@ -236,7 +236,7 @@ void makeAudio(int16_t *buffer, long int N)
 
 }
 
-//Virker vidst ikke helt
+//Virker vidst ikke helt, men det er heller ikke nødvendigt jo haha
 int _bfsk(){
   char *binary_bytes, c;
   int index = 0;
