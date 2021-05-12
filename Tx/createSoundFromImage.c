@@ -6,6 +6,9 @@
 #include <windows.h>
 #include <time.h>
 
+//gcc createSoundFromImage.c
+//a.exe -webcam 0/1 -> 0 hvis man ik vil tage billede og 1 hvis man vil (webcam skal nok ændres afhængigt af computer)
+
 int CaptureImage(char *argv[]);
 int CompressImage();
 
