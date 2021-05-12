@@ -78,8 +78,7 @@ int _8fsk()
   fclose(binaryFilePtr); //and closes file when done
 
   long int N = 2 * binaryFileLen * bitDuration / 2.95; //number of samples
-//why 2 og why 2.95?
-//why 3?
+
   int16_t *buffer = malloc(3 * (N + 1) * sizeof(int16_t)); //buffer array
   if (buffer == NULL)
   {
@@ -103,12 +102,8 @@ int _8fsk()
   return 0;
 }
 
-<<<<<<< Updated upstream
 // source: https://batchloaf.wordpress.com/2017/02/10/a-simple-way-to-read-and-write-audio-and-video-files-in-c-using-ffmpeg/ 
-int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int binaryFileLen, int bitDuration)
-=======
 int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int binaryFileLen, int bitDuration, int N)
->>>>>>> Stashed changes
 {
   long int n = 0; // buffer index
   int j = 0, e = bitDuration;    // bit array index
@@ -217,7 +212,7 @@ int calcSamples(int16_t **samples, int bitDuration, long int N, int binaryFileLe
   int seconds = N / f_s;  //  second calculation used in calculation of bps
   int bps = binaryFileLen / seconds;  //  calculation for bps
 
-  double p2sf = 2.0 * M_PI / f_s;
+  double p2f_s = 2.0 * M_PI / f_s;
   for (int i = 1; i <= 10; i++)
   {
     samples[i] = malloc(bitDuration * sizeof(int16_t));
@@ -226,7 +221,7 @@ int calcSamples(int16_t **samples, int bitDuration, long int N, int binaryFileLe
 
     for (int j = 0; j < bitDuration; j++)
     {
-        samples[i][j] = amp * sin(j * (freq * i) * p2sf);
+        samples[i][j] = amp * sin(j * (freq * i) * p2f_s);
     }
   }
     //  prints the initial binary file length, duration of audio file and bit rate
