@@ -106,7 +106,8 @@ int _8fsk()
 int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int binaryFileLen, int bitDuration, int N)
 {
   long int n = 0; // buffer index
-  int j = 0, e = bitDuration;    // bit array index
+  int j = 0,
+       e = bitDuration;    // bit array index
 
   int16_t *samples[11];
   if (calcSamples(samples, bitDuration, N, binaryFileLen)) //calculates matrix of samples
@@ -193,7 +194,7 @@ int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int binaryFileLen, 
 
     e += bitDuration;
     for (n; n < e; n++) // end-tone, takes the first sine wave sample value
-                        // and add them to the start of the buffer array
+                        // and add them to the buffer array
     {
       buffer[n] = samples[1][n % bitDuration];
     }
