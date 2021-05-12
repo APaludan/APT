@@ -10,7 +10,7 @@
 int _8fsk();
 int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int binaryFileLen, int bitDuration, int N);
 void makeAudio(int16_t *buffer, long int N);
-int calcSine(int16_t **samples, int bitDuration, long int N, int binaryFileLen);
+int calcSamples(int16_t **samples, int bitDuration, long int N, int binaryFileLen);
 
 //int _bfsk();
 
@@ -110,7 +110,7 @@ int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int binaryFileLen, 
        e = bitDuration;    // bit array index
 
   int16_t *samples[11];
-  if (calcSine(samples, bitDuration, N, binaryFileLen)) //calculates matrix of samples
+  if (calcSamples(samples, bitDuration, N, binaryFileLen)) //calculates matrix of samples
   {
     printf("Audio samples memory allocation error");
     return 1;
@@ -205,10 +205,10 @@ int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int binaryFileLen, 
   return 0;
 }
 
-int calcSine(int16_t **samples, int bitDuration, long int N, int binaryFileLen)
+int calcSamples(int16_t **samples, int bitDuration, long int N, int binaryFileLen)
 {
   double amp = 16383.0; // amplitude
-  double f_s = 44000.0;        // sampling frequency
+  double f_s = 44000.0;        // sampling frequency 
   double freq = 440.0;        // frequency of sine wave
   int seconds = N / f_s;  //  second calculation used in calculation of bps
   int bps = binaryFileLen / seconds;  //  calculation for bps
@@ -222,7 +222,8 @@ int calcSine(int16_t **samples, int bitDuration, long int N, int binaryFileLen)
 
     for (int j = 0; j < bitDuration; j++) //j er tid ud af x-akssen
     {
-        samples[i][j] = amp * sin(j * (freq * i) * p2f_s);
+        samples[i][j] = amp * sin(j * (freq * i) * p2f_s); 
+        //vi får en y værdi som svarer til amplituden af kurven til tiden j
     }
   }
     //  prints the initial binary file length, duration of audio file and bit rate
