@@ -10,7 +10,7 @@
 int _8fsk();
 int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int binaryFileLen, int bitDuration, int N);
 void makeAudio(int16_t *buffer, long int N);
-int calcSamples(int16_t **samples, int bitDuration, long int N, int binaryFileLen);
+int calcSine(int16_t **samples, int bitDuration, long int N, int binaryFileLen);
 
 //int _bfsk();
 
@@ -110,7 +110,7 @@ int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int binaryFileLen, 
        e = bitDuration;    // bit array index
 
   int16_t *samples[11];
-  if (calcSamples(samples, bitDuration, N, binaryFileLen)) //calculates matrix of samples
+  if (calcSine(samples, bitDuration, N, binaryFileLen)) //calculates matrix of samples
   {
     printf("Audio samples memory allocation error");
     return 1;
@@ -205,7 +205,7 @@ int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int binaryFileLen, 
   return 0;
 }
 
-int calcSamples(int16_t **samples, int bitDuration, long int N, int binaryFileLen)
+int calcSine(int16_t **samples, int bitDuration, long int N, int binaryFileLen)
 {
   double amp = 16383.0; // amplitude
   double f_s = 44000.0;        // sampling frequency
@@ -220,7 +220,7 @@ int calcSamples(int16_t **samples, int bitDuration, long int N, int binaryFileLe
     if (samples[i] == NULL)
         return 1;
 
-    for (int j = 0; j < bitDuration; j++)
+    for (int j = 0; j < bitDuration; j++) //j er tid ud af x-akssen
     {
         samples[i][j] = amp * sin(j * (freq * i) * p2f_s);
     }
