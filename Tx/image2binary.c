@@ -10,7 +10,6 @@ int main(int argc, char *argv[])
 {
   unsigned char *imageBytes; //char array for storing image bytes
   int i, imageIndex; 
-
   FILE *imagePtr, *txtPtr;
 
   #pragma region OpenFiles

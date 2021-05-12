@@ -12,7 +12,7 @@ int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int binaryFileLen);
 void makeAudio(int16_t *buffer, long int N);
 int calcSamples(int16_t **samples);
 
-int _bfsk();
+//int _bfsk();
 
 int main(int argc, char *argv[])
 {
@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
 	}
 	else if (modulationScheme == 1)
 	{
-		_bfsk();
+		//_bfsk();
 	}
 	
   return 0;
@@ -72,11 +72,13 @@ int _8fsk()
     return 1;
   }
 
-  fread(binaryBytes, binaryFileLen, 1, binaryFilePtr); //reads the binary file
+  //Reads the bytes from binaryFilePtr and puts it into binaryBytes
+  fread(binaryBytes, binaryFileLen, 1, binaryFilePtr); 
   fclose(binaryFilePtr); //and closes file when done
 
   long int N = 2 * binaryFileLen * bitDuration / 2.95; //number of samples
-
+//why 2 og why 2.95?
+//why 3?
   int16_t *buffer = malloc(3 * (N + 1) * sizeof(int16_t)); //buffer array
   if (buffer == NULL)
   {
@@ -84,7 +86,7 @@ int _8fsk()
     return 1;
   }     
 
-  if (makeAudioBuffer(buffer, binaryBytes, binaryFileLen) == 1)
+  if (makeAudioBuffer(buffer, binaryBytes, binaryFileLen))
     return 1;
     free(binaryBytes);
 
@@ -236,6 +238,7 @@ void makeAudio(int16_t *buffer, long int N)
 }
 
 //Virker vidst ikke helt, men det er heller ikke nødvendigt jo haha
+/*
 int _bfsk(){
   char *binary_bytes, c;
   int index = 0;
@@ -317,7 +320,7 @@ int _bfsk(){
     return 1;
   }
   
-  /*
+  
   printf("Add values to csv file\n");
   FILE *csvfile;
   //csvfile = fopen("../io_files/samples.csv", "w");
@@ -330,7 +333,8 @@ int _bfsk(){
     }
   } 
   fclose(csvfile);
-  */
+  
 
   fclose(binary_file_ptr);
 }
+*/
