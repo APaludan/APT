@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
 	//documentation for FFmpeg: https://ffmpeg.org/ffmpeg.html 
 
 	//Converts image file to binary text file
-	system("image2binary.exe ../tempFiles/tempImage_compressed.jpeg ../tempFiles/tempBinary.txt");
+	system("image2binary.exe ../tempFiles/hygge.gif ../tempFiles/tempBinary.txt");
 	
 	//Converts binary text file to sound
 	system("binary2sound.exe -modulationScheme 8fsk");
@@ -92,7 +92,7 @@ int CompressImage()
 
 	int compressingImage = 1; //compressing image state 	
 
-	compressingImage = system("ffmpeg.exe -hide_banner -loglevel error -y -i ../tempFiles/tempImage.png -q:v 2 -vf scale=128:-1 ../tempFiles/tempImage_compressed.jpeg"); 
+	compressingImage = system("ffmpeg.exe -hide_banner -loglevel error -y -i ../tempFiles/tempImage.png -q:v 2 -vf scale=5:-1 ../tempFiles/tempImage_compressed.gif"); 
   if(compressingImage == 0)
   {
     printf("Image has been compressed successfully\n");

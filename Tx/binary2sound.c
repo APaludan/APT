@@ -8,9 +8,9 @@
 
 //Modulation functions
 int _8fsk();
-int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int binaryFileLen, int bitDuration);
+int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int binaryFileLen, int bitDuration, int N);
 void makeAudio(int16_t *buffer, long int N);
-int calcSamples(int16_t **samples, int bitDuration);
+int calcSamples(int16_t **samples, int bitDuration, long int N, int binaryFileLen);
 
 //int _bfsk();
 
@@ -49,7 +49,8 @@ int _8fsk()
 {
   char *binaryBytes, c;
   int index = 0, 
-      bitDuration = 100 * 100; // duration of each bit (samples per bit)
+      //bitDuration is calculated by dividing the sample rate of the system with the framerate. eg: 44100 / 144 = 306.25 (INT 306)
+      bitDuration = 306*30; // duration of each bit (samples per bit)
 
   FILE *binaryFilePtr = fopen("../tempFiles/tempBinary.txt", "r");
   if (binaryFilePtr == NULL)
@@ -86,7 +87,7 @@ int _8fsk()
     return 1;
   }     
 
-  if (makeAudioBuffer(buffer, binaryBytes, binaryFileLen, bitDuration))
+  if (makeAudioBuffer(buffer, binaryBytes, binaryFileLen, bitDuration, N))
     return 1;
     free(binaryBytes);
 
@@ -102,14 +103,18 @@ int _8fsk()
   return 0;
 }
 
+<<<<<<< Updated upstream
 // source: https://batchloaf.wordpress.com/2017/02/10/a-simple-way-to-read-and-write-audio-and-video-files-in-c-using-ffmpeg/ 
 int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int binaryFileLen, int bitDuration)
+=======
+int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int binaryFileLen, int bitDuration, int N)
+>>>>>>> Stashed changes
 {
   long int n = 0; // buffer index
   int j = 0, e = bitDuration;    // bit array index
 
   int16_t *samples[11];
-  if (calcSamples(samples, bitDuration)) //calculates matrix of samples
+  if (calcSamples(samples, bitDuration, N, binaryFileLen)) //calculates matrix of samples
   {
     printf("Audio samples memory allocation error");
     return 1;
@@ -204,11 +209,13 @@ int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int binaryFileLen, 
   return 0;
 }
 
-int calcSamples(int16_t **samples, int bitDuration)
+int calcSamples(int16_t **samples, int bitDuration, long int N, int binaryFileLen)
 {
   double amp = 16383.0; // amplitude
   double f_s = 44000.0;        // sampling frequency
   double freq = 440.0;        // frequency of sine wave
+  int seconds = N / f_s;  //  second calculation used in calculation of bps
+  int bps = binaryFileLen / seconds;  //  calculation for bps
 
   double p2sf = 2.0 * M_PI / f_s;
   for (int i = 1; i <= 10; i++)
@@ -222,13 +229,18 @@ int calcSamples(int16_t **samples, int bitDuration)
         samples[i][j] = amp * sin(j * (freq * i) * p2sf);
     }
   }
+    //  prints the initial binary file length, duration of audio file and bit rate
+    printf("Input len: %d\n", binaryFileLen);
+    printf("N: %ld\n", N);
+    printf("Seconds: %d\n", seconds);
+    printf("bps: %d\n", bps);
   return 0;
 }
 
 void makeAudio(int16_t *buffer, long int N)
 {
   // Pipe the audio data to ffmpeg, which writes it to an audio file (wav/flac..)
-  FILE *audioPtr = popen("ffmpeg.exe -hide_banner -loglevel error -y -f s16le -acodec pcm_s16le -vn -ar 44000 -ac 1 -i - ../tempFiles/imageAudio.flac", "w");
+  FILE *audioPtr = popen("ffmpeg.exe -hide_banner -loglevel error -y -f s16le -acodec pcm_s16le -vn -ar 44000 -ac 1 -i - ../tempFiles/imageAudio.wav", "w");
     fwrite(buffer, 2, N, audioPtr);
     pclose(audioPtr);
 

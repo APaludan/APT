@@ -1,3 +1,7 @@
 *.flac
 
 imageAudio.flac
+
+*.wav
+
+imageAudio.wav
