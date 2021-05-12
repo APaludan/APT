@@ -106,7 +106,7 @@ int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int binaryFileLen)
   int j = 0,     // bit array index
       bitDuration = 100 * 100; // duration of each bit (samples per bit)
 
-  int e; //beskriv end of ..
+  int e = bitDuration; //beskriv end of ..
 
   int16_t *samples[11];
   if (calcSamples(samples) == 1) //calculates matrix of samples
@@ -115,7 +115,6 @@ int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int binaryFileLen)
     return 1;
   }
 
-  e += bitDuration;
   for (n; n < e; n++) // Wake-up tone, takes the first sine wave sample value
                       // and add them to the start of the buffer array
   {
