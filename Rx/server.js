@@ -51,7 +51,7 @@ function processReq(req, res) {
 /* start the server */
 server.listen(port, hostname, () => {
     console.log(`Server running at http://${hostname}:${port}/`);
-    fs.writeFileSync('message.txt', `Server running at http://${hostname}:${port}/`);
+    //fs.writeFileSync('message.txt', `Server running at http://${hostname}:${port}/`);
 });
 
 /* send contents as file as response */
