@@ -6,11 +6,11 @@
 #include <windows.h>
 #include <time.h>
 
-void printInfo(long int N, int filelen);
+//void printInfo(long int N, int filelen);
 int makeAudioBuffer(int16_t *buf, char *input, long int filelen);
 void makeAudio(int16_t *buf, long int N);
-void cleanUp(int mode);
-void ccImage(void);
+//void cleanUp(int mode);
+//void ccImage(void);
 int calcSamples(int16_t **samples);
 
 double amp = INT16_MAX - 1; // amplitude
@@ -19,10 +19,7 @@ int bd = 100 * 100;         // duration of each bit (samples per bit)
 double freq = 440.0;        // frequency of sine wave
 
 int main(void)
-{
-
-    
-
+{   
     int mode = 0; // 0 = No webcam | 1 = webcam
     //cleanUp(mode);
     if (mode == 1)

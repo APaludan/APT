@@ -29,18 +29,9 @@ int main(int argc, char *argv[])
 	
 	printf("TEST 2");
 	//Converts binary text file to sound
-	system("binary2sound.exe -output ../tempFiles/tmpSound.flac -modulationScheme 8fsk");
+	system("binary2sound.exe -modulationScheme 8fsk");
 
 	printf("TEST 3");
-
-	//Take an image  - DONE
-	//Compress image - DONE
-	//Image 2 binary - DONE
-	//binary 2 sound - 
-	//Clean up optional - 
-  //og det i js - 
-  //husk at free malloc ting og fejlbeskeder
-	
 
   return 0;
 }
