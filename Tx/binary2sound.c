@@ -3,16 +3,16 @@
 #include <stdint.h>
 #include <math.h>
 #include <string.h>
-//#include <windows.h>
+#include <windows.h>
 #include <time.h>
 
 //Modulation functions
 int _8fsk();
-int makeAudioBuffer(int16_t *buffer, char *binaryBytes, int bitDuration, long binaryFileLen, int N);
-void add_separator_tone(int16_t *buffer, long int *n, int bitDuration, int_16t **samples);
-void add_bitstring_tone(int16_t *buffer, long int *n, int bitDuration, char *binaryBytes, long int j, int_16t **samples);
+int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int bitDuration, long binaryFileLen, int N);
+void add_separator_tone(int16_t *buffer, long int *n, long int bitDuration, int16_t **samples);
+void add_bitstring_tone(int16_t *buffer, long int *n, long int bitDuration, char *binaryBytes, long int j, int16_t **samples);
 void makeAudio(int16_t *buffer, long int N);
-int calcSamples(int16_t **samples, int bitDuration, long int N, long binaryFileLen);
+int calcSamples(int16_t **samples, long int bitDuration, long int N, long binaryFileLen);
 
 //int _bfsk();
 
@@ -50,17 +50,21 @@ int main(int argc, char *argv[])
 int _8fsk()
 {
   char *binaryBytes, c;
-  int index = 0, 
+  int index = 0;
       //bitDuration is calculated by dividing the sample rate of the system with the framerate. eg: 44100 / 144 = 306.25 (INT 306)
-      bitDuration = 306*30; // duration of each bit (samples per bit)
+  long int bitDuration = 51840; // duration of each bit (samples per bit)
+      // før 306*30
 
-  FILE *binaryFilePtr = fopen("../tempFiles/tempBinary.txt", "r");
+  //FILE *binaryFilePtr = fopen("../tempFiles/tempBinary.txt", "r");
+    FILE *binaryFilePtr = fopen("../tempFiles/img.txt", "r");
   if (binaryFilePtr == NULL)
   {
     fclose(binaryFilePtr);
     printf("Could not open file");
     return 1;
   }
+
+  printf("Bitduration: %ld\n", bitDuration);
 
   fseek(binaryFilePtr, 0, SEEK_END);
   long binaryFileLen = ftell(binaryFilePtr); //Tells the position of the pointer
@@ -92,11 +96,12 @@ int _8fsk()
     printf("Audio buffer memory allocation error");
     return 1;
   }     
-
-  if (makeAudioBuffer(buffer, binaryBytes, binaryFileLen, bitDuration, N))
+  printf("Bitduration 99: %ld\n", bitDuration);
+  if (makeAudioBuffer(buffer, binaryBytes, bitDuration, binaryFileLen, N))
     return 1;
     free(binaryBytes);
 
+  printf("Bitduration 104: %ld\n", bitDuration);
   makeAudio(buffer, N);
   free(buffer);
   /*
@@ -111,16 +116,18 @@ int _8fsk()
 // int16_t *buffer, char *binaryBytes, long int binaryFileLen, int bitDuration, int N
 //makeAudioBuffer skal returnere 1 ved fejl (kopier det op) eller 0 ved succes
 
-int makeAudioBuffer(int16_t *buffer, char *binaryBytes, int bitDuration, long binaryFileLen, int N){
+int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int bitDuration, long binaryFileLen, int N){
   long int n = 0, j = 0; 
-  int16_t *samples[11];
+  int16_t *samples[15];
+  printf("Bitduration 122: %ld\n", bitDuration);
+
   if (calcSamples(samples, bitDuration, N, binaryFileLen)) //calculates matrix of samples
   {
     printf("Audio samples memory allocation error");
     return 1;
   }
-    
-  //printf("find_samples start\n");
+  //printf("Bitduration 127: %ld\n", bitDuration);
+  printf("find_samples start\n");
 
   add_separator_tone(buffer, &n, bitDuration, samples);
   while (j < (int)binaryFileLen){
@@ -129,51 +136,51 @@ int makeAudioBuffer(int16_t *buffer, char *binaryBytes, int bitDuration, long bi
     j += 3;
   }
 
-    //printf("find_samples slut\n");
+    printf("find_samples slut\n");
     return 0;
 }
 
-void add_separator_tone(int16_t *buffer, long int *n, int bitDuration, int_16t **samples){ //skriver en separator-tone (440 Hz) ind i buf
-    //printf("add_separator_tone start\n");
-    //printf("n = %ld\n", *n);
-
-    long int e = (*n) + (long int)bitDuration;
+void add_separator_tone(int16_t *buffer, long int *n, long int bitDuration, int16_t **samples){ //skriver en separator-tone (440 Hz) ind i buf
+    long int e = (*n) + bitDuration;
+    printf("add_separator_tone start\n");
+    printf("n = %ld, e = %ld\n, bitduration = %ld\n", *n, e, bitDuration);
     for (*n; *n < e; (*n)++) // wake-up tone
     {
         //printf("buf[%ld] = samples[1][%ld mod %d]\n", *n, *n, bd);
         buffer[*n] = samples[1][(*n) % bitDuration];
     }
-    //printf("add_separator_tone slut\n");
+    printf("add_separator_tone slut\n");
 }
 
-void add_bitstring_tone(int16_t *buffer, long int *n, int bitDuration, char *binaryBytes, long int j, int_16t **samples){
-    int i = 0, k = 0;
+void add_bitstring_tone(int16_t *buffer, long int *n, long int bitDuration, char *binaryBytes, long int j, int16_t **samples){
+    int i = 0, k = 0, combination = 0;
     char bitCombinations[14][4] = {"000", "001", "010", "100", "011", "101", "110", "111",
                                    "00", "01", "10", "11",
                                    "0", "1"
                                   };
     char str[4] = "";
+    long int e = (*n) + bitDuration;
 
-    //printf("add_bitstring_tone start\n");
-
+    printf("add_bitstring_tone start\n");
+    printf("n = %ld, e = %ld\n ", *n, e);
     for (k = 0; k < 3; ++k){
         strncat(str, &binaryBytes[j+k], 1);
-        //printf("%s\n", str);
+        printf("%s\n", str);
     }
 
     for (i = 0; i < 14; ++i){
         if (!strcmp(str,bitCombinations[i])){
-          //printf("Str combination #%d\n", i);
-          break;
+          printf("Str combination #%d\n", i);
+          combination = i;
         }
     }
+    printf("Samples[i][nbit] = %d\n", (int)samples[combination][*n % bitDuration + 1000]);
 
-    long int e = (*n) + (long int)bitDuration;
     for (*n; *n < e; (*n)++) // wake-up tone
     {
-        buffer[*n] = samples[i][(*n) % bitDuration];
+        buffer[*n] = samples[combination+1][(*n) % bitDuration];
     }
-    //printf("add_bitstring_tone slut\n");
+    printf("add_bitstring_tone slut\n");
 }
 
 
@@ -280,16 +287,18 @@ void add_bitstring_tone(int16_t *buffer, long int *n, int bitDuration, char *bin
   return 0;
 }*/
 
-int calcSamples(int16_t **samples, int bitDuration, long int N, long binaryFileLen)
+int calcSamples(int16_t **samples, long int bitDuration, long int N, long binaryFileLen)
 {
   double amp = 16383.0; // amplitude
   double f_s = 44000.0;        // sampling frequency 
   double freq = 440.0;        // frequency of sine wave
   int seconds = N / f_s;  //  second calculation used in calculation of bps
   int bps = binaryFileLen / seconds;  //  calculation for bps
-
   double p2f_s = 2.0 * M_PI / f_s;
-  for (int i = 1; i <= 10; i++)
+
+  printf("Bitduration 297: %ld\n", bitDuration);
+
+  for (int i = 1; i <= 14; i++)
   {
     samples[i] = malloc(bitDuration * sizeof(int16_t));
     if (samples[i] == NULL)
@@ -301,6 +310,7 @@ int calcSamples(int16_t **samples, int bitDuration, long int N, long binaryFileL
         //vi får en y værdi som svarer til amplituden af kurven til tiden j
     }
   }
+
     //  prints the initial binary file length, duration of audio file and bit rate
     printf("Input len: %d\n", binaryFileLen);
     printf("N: %ld\n", N);
@@ -419,3 +429,4 @@ int _bfsk(){
   fclose(binary_file_ptr);
 }
 */
+

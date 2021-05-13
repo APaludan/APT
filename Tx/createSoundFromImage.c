@@ -92,7 +92,7 @@ int CompressImage()
 
 	int compressingImage = 1; //compressing image state 	
 
-	compressingImage = system("ffmpeg.exe -hide_banner -loglevel error -y -i ../tempFiles/tempImage.png -q:v 2 -vf scale=5:-1 ../tempFiles/tempImage_compressed.jpeg"); 
+	compressingImage = system("ffmpeg.exe -hide_banner -loglevel error -y -i ../tempFiles/tempImage.png -q:v 2 -vf scale=1:-1 ../tempFiles/tempImage_compressed.jpeg"); 
   if(compressingImage == 0)
   {
     printf("Image has been compressed successfully\n");
