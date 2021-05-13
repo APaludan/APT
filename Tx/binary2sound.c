@@ -52,11 +52,11 @@ int _8fsk()
   char *binaryBytes, c;
   int index = 0;
       //bitDuration is calculated by dividing the sample rate of the system with the framerate. eg: 44100 / 144 = 306.25 (INT 306)
-  long int bitDuration = 51840; // duration of each bit (samples per bit)
+  long int bitDuration = 306*30; // duration of each bit (samples per bit)
       // før 306*30
 
-  //FILE *binaryFilePtr = fopen("../tempFiles/tempBinary.txt", "r");
-    FILE *binaryFilePtr = fopen("../tempFiles/img.txt", "r");
+  FILE *binaryFilePtr = fopen("../tempFiles/tempBinary.txt", "r");
+  //  FILE *binaryFilePtr = fopen("../tempFiles/img.txt", "r"); //short binary file for test
   if (binaryFilePtr == NULL)
   {
     fclose(binaryFilePtr);
@@ -118,38 +118,30 @@ int _8fsk()
 
 int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int bitDuration, long binaryFileLen, int N){
   long int n = 0, j = 0; 
-  int16_t *samples[15];
-  printf("Bitduration 122: %ld\n", bitDuration);
+  int16_t *samples[16];
 
   if (calcSamples(samples, bitDuration, N, binaryFileLen)) //calculates matrix of samples
   {
     printf("Audio samples memory allocation error");
     return 1;
   }
-  //printf("Bitduration 127: %ld\n", bitDuration);
-  printf("find_samples start\n");
 
-  add_separator_tone(buffer, &n, bitDuration, samples);
-  while (j < (int)binaryFileLen){
+  add_separator_tone(buffer, &n, bitDuration, samples); //writes wake up tone to buffer
+  while (j < (int)binaryFileLen){ //writes tones to the buffer depending on combinations of three bits at a time. Every other tone is a separation tone (to make rx easier)
     add_bitstring_tone(buffer, &n, bitDuration, binaryBytes, j, samples);
     add_separator_tone(buffer, &n, bitDuration, samples);
     j += 3;
   }
-
-    printf("find_samples slut\n");
-    return 0;
+  return 0;
 }
 
-void add_separator_tone(int16_t *buffer, long int *n, long int bitDuration, int16_t **samples){ //skriver en separator-tone (440 Hz) ind i buf
-    long int e = (*n) + bitDuration;
-    printf("add_separator_tone start\n");
-    printf("n = %ld, e = %ld\n, bitduration = %ld\n", *n, e, bitDuration);
-    for (*n; *n < e; (*n)++) // wake-up tone
+void add_separator_tone(int16_t *buffer, long int *n, long int bitDuration, int16_t **samples){ //skriver en separator-tone (440 Hz) ind i buffer
+    long int e = (*n) + bitDuration; //is used in the for loop as the upper bound for n, as the number of samples for each bit sequence/separation tone should be equal to the bitDuration measured in samples
+    
+    for (*n; *n < e; (*n)++)
     {
-        //printf("buf[%ld] = samples[1][%ld mod %d]\n", *n, *n, bd);
         buffer[*n] = samples[1][(*n) % bitDuration];
     }
-    printf("add_separator_tone slut\n");
 }
 
 void add_bitstring_tone(int16_t *buffer, long int *n, long int bitDuration, char *binaryBytes, long int j, int16_t **samples){
@@ -159,30 +151,63 @@ void add_bitstring_tone(int16_t *buffer, long int *n, long int bitDuration, char
                                    "0", "1"
                                   };
     char str[4] = "";
-    long int e = (*n) + bitDuration;
+    long int e = (*n) + bitDuration;//is used in the for loop as the upper bound for n, as the number of samples for each bit sequence/separation tone should be equal to the bitDuration measured in samples
 
-    printf("add_bitstring_tone start\n");
-    printf("n = %ld, e = %ld\n ", *n, e);
     for (k = 0; k < 3; ++k){
-        strncat(str, &binaryBytes[j+k], 1);
-        printf("%s\n", str);
+        strncat(str, &binaryBytes[j+k], 1); //copies next three bits from binary img-file into a separate string
     }
 
     for (i = 0; i < 14; ++i){
-        if (!strcmp(str,bitCombinations[i])){
-          printf("Str combination #%d\n", i);
-          combination = i;
+        if (!strcmp(str,bitCombinations[i])){ //compares string to the possible bit combinations to find the correct index
+          combination = i; //kunne vi lave det her tilbage til break? det kan vi lige prøve
         }
     }
-    printf("Samples[i][nbit] = %d\n", (int)samples[combination][*n % bitDuration + 1000]);
 
-    for (*n; *n < e; (*n)++) // wake-up tone
+    for (*n; *n < e; (*n)++)
     {
-        buffer[*n] = samples[combination+1][(*n) % bitDuration];
+        buffer[*n] = samples[combination+2][(*n) % bitDuration]; //samples[1] is the separation tone, meaning that the tones representing bit seqs have indices 2 through 15
     }
-    printf("add_bitstring_tone slut\n");
 }
 
+
+int calcSamples(int16_t **samples, long int bitDuration, long int N, long binaryFileLen)
+{
+  double amp = 16383.0; // amplitude
+  double f_s = 44000.0;        // sampling frequency 
+  double freq = 440.0;        // frequency of sine wave
+  int seconds = N / f_s;  //  second calculation used in calculation of bps
+  int bps = binaryFileLen / seconds;  //  calculation for bps
+  double p2f_s = 2.0 * M_PI / f_s;
+
+  for (int i = 1; i <= 15; i++)
+  {
+    samples[i] = malloc(bitDuration * sizeof(int16_t));
+    if (samples[i] == NULL)
+        return 1;
+
+    for (int j = 0; j < bitDuration; j++) //j er tid ud af x-aksen
+    {
+        samples[i][j] = amp * sin(j * (freq * i) * p2f_s); 
+        //vi får en y værdi som svarer til amplituden af kurven til tiden j
+    }
+  }
+
+    //  prints the initial binary file length, duration of audio file and bit rate
+    printf("Input len: %d\n", binaryFileLen);
+    printf("N: %ld\n", N);
+    printf("Seconds: %d\n", seconds);
+    printf("bps: %d\n", bps);
+  return 0;
+}
+
+void makeAudio(int16_t *buffer, long int N)
+{
+  // Pipe the audio data to ffmpeg, which writes it to an audio file (wav/flac..)
+  FILE *audioPtr = popen("ffmpeg.exe -hide_banner -loglevel error -y -f s16le -acodec pcm_s16le -vn -ar 44000 -ac 1 -i - ../tempFiles/imageAudio.wav", "w");
+    fwrite(buffer, 2, N, audioPtr);
+    pclose(audioPtr);
+
+}
 
 // source: https://batchloaf.wordpress.com/2017/02/10/a-simple-way-to-read-and-write-audio-and-video-files-in-c-using-ffmpeg/ 
 /*int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int binaryFileLen, int bitDuration, int N)
@@ -286,47 +311,6 @@ void add_bitstring_tone(int16_t *buffer, long int *n, long int bitDuration, char
   printf("Audio buffer finished\n");
   return 0;
 }*/
-
-int calcSamples(int16_t **samples, long int bitDuration, long int N, long binaryFileLen)
-{
-  double amp = 16383.0; // amplitude
-  double f_s = 44000.0;        // sampling frequency 
-  double freq = 440.0;        // frequency of sine wave
-  int seconds = N / f_s;  //  second calculation used in calculation of bps
-  int bps = binaryFileLen / seconds;  //  calculation for bps
-  double p2f_s = 2.0 * M_PI / f_s;
-
-  printf("Bitduration 297: %ld\n", bitDuration);
-
-  for (int i = 1; i <= 14; i++)
-  {
-    samples[i] = malloc(bitDuration * sizeof(int16_t));
-    if (samples[i] == NULL)
-        return 1;
-
-    for (int j = 0; j < bitDuration; j++) //j er tid ud af x-aksen
-    {
-        samples[i][j] = amp * sin(j * (freq * i) * p2f_s); 
-        //vi får en y værdi som svarer til amplituden af kurven til tiden j
-    }
-  }
-
-    //  prints the initial binary file length, duration of audio file and bit rate
-    printf("Input len: %d\n", binaryFileLen);
-    printf("N: %ld\n", N);
-    printf("Seconds: %d\n", seconds);
-    printf("bps: %d\n", bps);
-  return 0;
-}
-
-void makeAudio(int16_t *buffer, long int N)
-{
-  // Pipe the audio data to ffmpeg, which writes it to an audio file (wav/flac..)
-  FILE *audioPtr = popen("ffmpeg.exe -hide_banner -loglevel error -y -f s16le -acodec pcm_s16le -vn -ar 44000 -ac 1 -i - ../tempFiles/imageAudio.wav", "w");
-    fwrite(buffer, 2, N, audioPtr);
-    pclose(audioPtr);
-
-}
 
 //Virker vidst ikke helt, men det er heller ikke nødvendigt jo haha
 /*
