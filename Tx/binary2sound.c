@@ -53,7 +53,6 @@ int _8fsk()
   int index = 0;
       //bitDuration is calculated by dividing the sample rate of the system with the framerate. eg: 44100 / 144 = 306.25 (INT 306)
   long int bitDuration = 306*30; // duration of each bit (samples per bit)
-      // før 306*30
 
   FILE *binaryFilePtr = fopen("../tempFiles/tempBinary.txt", "r");
   //  FILE *binaryFilePtr = fopen("../tempFiles/img.txt", "r"); //short binary file for test
@@ -96,14 +95,15 @@ int _8fsk()
     printf("Audio buffer memory allocation error");
     return 1;
   }     
-  printf("Bitduration 99: %ld\n", bitDuration);
+
+  //makeAudioBuffer skal returnere 1 ved fejl eller 0 ved succes
   if (makeAudioBuffer(buffer, binaryBytes, bitDuration, binaryFileLen, N))
     return 1;
     free(binaryBytes);
 
-  printf("Bitduration 104: %ld\n", bitDuration);
   makeAudio(buffer, N);
   free(buffer);
+
   /*
   printf("Transmitting...");
   system("../tempFiles/imageAudio.flac"); // play audio in system standard media player. must open in media player that close after play
@@ -113,8 +113,6 @@ int _8fsk()
   printf("8fsk is done creating the audio sample\n");
   return 0;
 }
-// int16_t *buffer, char *binaryBytes, long int binaryFileLen, int bitDuration, int N
-//makeAudioBuffer skal returnere 1 ved fejl (kopier det op) eller 0 ved succes
 
 int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int bitDuration, long binaryFileLen, int N){
   long int n = 0, j = 0; 
@@ -140,7 +138,12 @@ void add_separator_tone(int16_t *buffer, long int *n, long int bitDuration, int1
     
     for (*n; *n < e; (*n)++)
     {
-        buffer[*n] = samples[1][(*n) % bitDuration];
+        buffer[*n] = samples[1][(*n) % bitDuration]; //by doing n % bitDuration will always zero the value so
+                                                    //even if n is higher than the array size
+                                                    //it will never make an error.
+                                                    //fx. n = 10000   -> 10000 % 10000 = 0 -> 19999 % 10000 = 9999
+                                                    //fx. n = 30000   -> 30000 % 10000 = 0 -> 39999 % 10000 = 9999
+        
     }
 }
 
@@ -168,7 +171,6 @@ void add_bitstring_tone(int16_t *buffer, long int *n, long int bitDuration, char
         buffer[*n] = samples[combination+2][(*n) % bitDuration]; //samples[1] is the separation tone, meaning that the tones representing bit seqs have indices 2 through 15
     }
 }
-
 
 int calcSamples(int16_t **samples, long int bitDuration, long int N, long binaryFileLen)
 {
@@ -206,7 +208,6 @@ void makeAudio(int16_t *buffer, long int N)
   FILE *audioPtr = popen("ffmpeg.exe -hide_banner -loglevel error -y -f s16le -acodec pcm_s16le -vn -ar 44000 -ac 1 -i - ../tempFiles/imageAudio.wav", "w");
     fwrite(buffer, 2, N, audioPtr);
     pclose(audioPtr);
-
 }
 
 // source: https://batchloaf.wordpress.com/2017/02/10/a-simple-way-to-read-and-write-audio-and-video-files-in-c-using-ffmpeg/ 

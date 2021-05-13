@@ -116,7 +116,7 @@ function draw() {
   let maxAmp = 0;
   let largestBin;
 
-  //finds the max amplitude, also meaning the largest bin
+  //finds the bin that holds the max amplitude
   for (let i = 0; i < numberOfBins; i++) {
     let thisAmp = spectrum[i]; //amplitude of current bin
     if (thisAmp > maxAmp) {
