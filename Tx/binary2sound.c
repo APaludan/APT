@@ -3,12 +3,12 @@
 #include <stdint.h>
 #include <math.h>
 #include <string.h>
-#include <windows.h>
+//#include <windows.h>
 #include <time.h>
 
 //Modulation functions
 int _8fsk();
-int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int binaryFileLen, int bitDuration, int N);
+int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long binaryFileLen, int bitDuration, int N);
 void add_separator_tone(int16_t *buffer, long int *n, int bitDuration, int_16t **samples);
 void add_bitstring_tone(int16_t *buffer, long int *n, int bitDuration, char *binaryBytes, long int j, int_16t **samples);
 void makeAudio(int16_t *buffer, long int N);
@@ -111,7 +111,7 @@ int _8fsk()
 // int16_t *buffer, char *binaryBytes, long int binaryFileLen, int bitDuration, int N
 //makeAudioBuffer skal returnere 1 ved fejl (kopier det op) eller 0 ved succes
 
-int makeAudioBuffer(int16_t *buffer, char *binaryBytes, int bitDuration, long int binaryFileLen, int N){
+int makeAudioBuffer(int16_t *buffer, char *binaryBytes, int bitDuration, long binaryFileLen, int N){
   long int n = 0, j = 0; 
   int16_t *samples[11];
   if (calcSamples(samples, bitDuration, N, binaryFileLen)) //calculates matrix of samples
@@ -123,7 +123,7 @@ int makeAudioBuffer(int16_t *buffer, char *binaryBytes, int bitDuration, long in
   //printf("find_samples start\n");
 
   add_separator_tone(buffer, &n, bitDuration, samples);
-  while (j < binaryFileLen){
+  while (j < (int)binaryFileLen){
     add_bitstring_tone(buffer, &n, bitDuration, binaryBytes, j, samples);
     add_separator_tone(buffer, &n, bitDuration, samples);
     j += 3;
