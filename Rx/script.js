@@ -43,7 +43,7 @@ function freqToBits(freq) {
   return 'nej';
 }
 
-//?
+//MANGLER
 document.getElementById("startpause").addEventListener("click", () => {
   recording = !recording;
   console.log(recording);
@@ -82,8 +82,9 @@ document.getElementById("reset").addEventListener("click", () => {
 });
 
 
+
 //-----------------
-//Functions ***
+//Functions for drawing and analyzing the sound
 //Source p5: https://p5js.org/
 //-----------------
 
@@ -142,7 +143,13 @@ function drawSpectrum(spectrum) {
   endShape();
 }
 
-//lav fra binary til billede
+
+
+//------------
+//For converting the binary data back to an image
+//-------------
+
+//MANGLER
 let test = "";
 
 let encodedData = btoa(binaryToString(test.replace(/(.{8})/g, "$1 ")));
