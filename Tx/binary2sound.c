@@ -12,7 +12,7 @@ int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int binaryFileLen, 
 void add_separator_tone(int16_t *buffer, long int *n, int bitDuration, int_16t **samples);
 void add_bitstring_tone(int16_t *buffer, long int *n, int bitDuration, char *binaryBytes, long int j, int_16t **samples);
 void makeAudio(int16_t *buffer, long int N);
-int calcSamples(int16_t **samples, int bitDuration, long int N, int binaryFileLen);
+int calcSamples(int16_t **samples, int bitDuration, long int N, long binaryFileLen);
 
 //int _bfsk();
 
@@ -280,7 +280,7 @@ void add_bitstring_tone(int16_t *buffer, long int *n, int bitDuration, char *bin
   return 0;
 }*/
 
-int calcSamples(int16_t **samples, int bitDuration, long int N, int binaryFileLen)
+int calcSamples(int16_t **samples, int bitDuration, long int N, long binaryFileLen)
 {
   double amp = 16383.0; // amplitude
   double f_s = 44000.0;        // sampling frequency 
