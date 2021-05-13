@@ -110,7 +110,7 @@ function setup() {
 function draw() {
   background(200);  //background color
 
-  let spectrum = fft.analyze(); //returns array of amplitudes measured in bins
+  let spectrum = fft.analyze(); //returns array of amplitudes referred to as bins
   drawSpectrum(spectrum);       
   let numberOfBins = spectrum.length;  //length of spectrum array is the number of bins in total
   let maxAmp = 0;
