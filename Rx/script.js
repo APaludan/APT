@@ -86,6 +86,7 @@ document.getElementById("reset").addEventListener("click", () => {
 //-----------------
 //Functions for drawing and analyzing the sound
 //Source p5: https://p5js.org/
+//https://p5js.org/examples/sound-frequency-spectrum.html 
 //-----------------
 
 //a p5.js function, that runs only once (when the page loads)
@@ -125,7 +126,7 @@ function draw() {
   }
   //calculates the loudest frequency
   //Samplerate returns the samples per sec, samplerate = sampling frequency
-  let loudestFreq = largestBin * (sampleRate() / numberOfBins) / 2;
+  let loudestFreq = largestBin * (sampleRate() / numberOfBins) / 2; //*læs om nyquist frequency 
   if (recording == true) {
     spec[j] = loudestFreq;
     j++;
