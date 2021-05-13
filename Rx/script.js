@@ -74,7 +74,7 @@ document.getElementById("startpause").addEventListener("click", () => {
     console.log(bitstring);
   }
 });
-
+//when reset button is being clicked on, the spec.length and j will be set to 0
 document.getElementById("reset").addEventListener("click", () => {
   spec.length = 0;
   j = 0;
