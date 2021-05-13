@@ -82,7 +82,6 @@ document.getElementById("reset").addEventListener("click", () => {
 });
 
 
-
 //-----------------
 //Functions for drawing and analyzing the sound
 //Source p5: https://p5js.org/
@@ -93,7 +92,6 @@ document.getElementById("reset").addEventListener("click", () => {
 function setup() {
   createCanvas(1000, 600); //creates canvas, dimensions: 1000x600 pixels
   noFill();                //disables filling geometry
-  //framerate(); kan den ik bruges?
 
   //Gets audio from fx. computer's microphone
   //mic.start() starts the recording
