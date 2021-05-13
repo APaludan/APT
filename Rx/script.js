@@ -122,25 +122,27 @@ function draw() {
       largestBin = i;
     }
   }
-
+  //calculates the loudest frequency
+  //Samplerate returns the samples per sec, samplerate = sampling frequency
   let loudestFreq = largestBin * (sampleRate() / numberOfBins) / 2;
   if (recording == true) {
     spec[j] = loudestFreq;
     j++;
   }
-
 }
 
 //This function draws what the fft has analyzed
 function drawSpectrum(spectrum) {
+  //begin- and endshape begins and stops recording vertices for a shape
   beginShape();
   for (i = 0; i < spectrum.length; i++) {
-    vertex(i, map(spectrum[i], 0, 255, height, 0));
+    vertex(i, map(spectrum[i], 0, 255, height, 0)); //i = x-coordinate of vertex, map(..) = y-coordinate 
+    //map(value, start1_cur, stop1_cur, start2_targ, stop2_targ) it re-maps a number from one range to another
   }
   endShape();
 }
 
-//lav fra bin til billede
+//lav fra binary til billede
 let test = "";
 
 let encodedData = btoa(binaryToString(test.replace(/(.{8})/g, "$1 ")));
