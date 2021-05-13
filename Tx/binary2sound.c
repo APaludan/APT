@@ -9,6 +9,8 @@
 //Modulation functions
 int _8fsk();
 int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int binaryFileLen, int bitDuration, int N);
+void add_separator_tone(int16_t *buffer, long int *n, int bitDuration, int_16t **samples);
+void add_bitstring_tone(int16_t *buffer, long int *n, int bitDuration, char *binaryBytes, long int j, int_16t **samples);
 void makeAudio(int16_t *buffer, long int N);
 int calcSamples(int16_t **samples, int bitDuration, long int N, int binaryFileLen);
 
@@ -106,9 +108,77 @@ int _8fsk()
   printf("8fsk is done creating the audio sample\n");
   return 0;
 }
+// int16_t *buffer, char *binaryBytes, long int binaryFileLen, int bitDuration, int N
+//makeAudioBuffer skal returnere 1 ved fejl (kopier det op) eller 0 ved succes
+
+int makeAudioBuffer(int16_t *buffer, char *binaryBytes, int bitDuration, long int binaryFileLen, int N){
+  long int n = 0, j = 0; 
+  int16_t *samples[11];
+  if (calcSamples(samples, bitDuration, N, binaryFileLen)) //calculates matrix of samples
+  {
+    printf("Audio samples memory allocation error");
+    return 1;
+  }
+    
+  //printf("find_samples start\n");
+
+  add_separator_tone(buffer, &n, bitDuration, samples);
+  while (j < binaryFileLen){
+    add_bitstring_tone(buffer, &n, bitDuration, binaryBytes, j, samples);
+    add_separator_tone(buffer, &n, bitDuration, samples);
+    j += 3;
+  }
+
+    //printf("find_samples slut\n");
+    return 0;
+}
+
+void add_separator_tone(int16_t *buffer, long int *n, int bitDuration, int_16t **samples){ //skriver en separator-tone (440 Hz) ind i buf
+    //printf("add_separator_tone start\n");
+    //printf("n = %ld\n", *n);
+
+    long int e = (*n) + (long int)bitDuration;
+    for (*n; *n < e; (*n)++) // wake-up tone
+    {
+        //printf("buf[%ld] = samples[1][%ld mod %d]\n", *n, *n, bd);
+        buffer[*n] = samples[1][(*n) % bitDuration];
+    }
+    //printf("add_separator_tone slut\n");
+}
+
+void add_bitstring_tone(int16_t *buffer, long int *n, int bitDuration, char *binaryBytes, long int j, int_16t **samples){
+    int i = 0, k = 0;
+    char bitCombinations[14][4] = {"000", "001", "010", "100", "011", "101", "110", "111",
+                                   "00", "01", "10", "11",
+                                   "0", "1"
+                                  };
+    char str[4] = "";
+
+    //printf("add_bitstring_tone start\n");
+
+    for (k = 0; k < 3; ++k){
+        strncat(str, &binaryBytes[j+k], 1);
+        //printf("%s\n", str);
+    }
+
+    for (i = 0; i < 14; ++i){
+        if (!strcmp(str,bitCombinations[i])){
+          //printf("Str combination #%d\n", i);
+          break;
+        }
+    }
+
+    long int e = (*n) + (long int)bitDuration;
+    for (*n; *n < e; (*n)++) // wake-up tone
+    {
+        buffer[*n] = samples[i][(*n) % bitDuration];
+    }
+    //printf("add_bitstring_tone slut\n");
+}
+
 
 // source: https://batchloaf.wordpress.com/2017/02/10/a-simple-way-to-read-and-write-audio-and-video-files-in-c-using-ffmpeg/ 
-int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int binaryFileLen, int bitDuration, int N)
+/*int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int binaryFileLen, int bitDuration, int N)
 {
   long int n = 0; // buffer index
   int j = 0,
@@ -208,7 +278,7 @@ int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int binaryFileLen, 
 
   printf("Audio buffer finished\n");
   return 0;
-}
+}*/
 
 int calcSamples(int16_t **samples, int bitDuration, long int N, int binaryFileLen)
 {
@@ -225,7 +295,7 @@ int calcSamples(int16_t **samples, int bitDuration, long int N, int binaryFileLe
     if (samples[i] == NULL)
         return 1;
 
-    for (int j = 0; j < bitDuration; j++) //j er tid ud af x-akssen
+    for (int j = 0; j < bitDuration; j++) //j er tid ud af x-aksen
     {
         samples[i][j] = amp * sin(j * (freq * i) * p2f_s); 
         //vi får en y værdi som svarer til amplituden af kurven til tiden j
