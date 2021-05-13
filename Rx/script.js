@@ -126,7 +126,7 @@ function draw() {
   }
   //calculates the loudest frequency
   //Samplerate returns the samples per sec, samplerate = sampling frequency
-  let loudestFreq = largestBin * (sampleRate() / numberOfBins) / 2; //*læs om nyquist frequency 
+  let loudestFreq = largestBin * (sampleRate() / numberOfBins) / 2;  
   if (recording == true) {
     spec[j] = loudestFreq;
     j++;
