@@ -3,8 +3,14 @@ let mic, fft, spec = [],  j = 0, recording = false;
 const validFreqs = [440, 880, 1320, 1760, 2200, 2640, 3080, 3520, 3960, 4400];
 const bits = ['', '010', '000', '100', '001', '110', '101', '', '011', '111'];
 
-//This function compare the x to the min and the max value
-//it returns true is x i within the limit, else false
+
+//-----------------
+//Functions for comparing frequencies 
+//and for converting frequencies to bits 
+//-----------------
+
+//This function compares the x to the min and the max value
+//it returns true if x i within the limit, else false
 function compare(x, min, max) {
   if (x > min && x < max) {
     return true;
@@ -25,7 +31,9 @@ function isValidFreq(freq) {
   return false;
 }
 
-//This
+//This function uses the validfreqs and bits constant
+//to convert the frequency into bits (1 bit combination corresponds to a frequency)
+//returns the bit if true
 function freqToBits(freq) {
   for (let i = 0; i < validFreqs.length; i++) {
     if (validFreqs[i] === freq) {
@@ -35,7 +43,7 @@ function freqToBits(freq) {
   return 'nej';
 }
 
-
+//?
 document.getElementById("startpause").addEventListener("click", () => {
   recording = !recording;
   console.log(recording);
@@ -73,30 +81,44 @@ document.getElementById("reset").addEventListener("click", () => {
   console.log("reset!");
 });
 
-// runs once on page load
-function setup() {
-  createCanvas(1000, 600);
-  noFill();
 
-  mic = new p5.AudioIn();
+//-----------------
+//Functions ***
+//Source p5: https://p5js.org/
+//-----------------
+
+//a p5.js function, that runs only once (when the page loads)
+function setup() {
+  createCanvas(1000, 600); //creates canvas, dimensions: 1000x600 pixels
+  noFill();                //disables filling geometry
+  //framerate(); kan den ik bruges?
+
+  //Gets audio from fx. computer's microphone
+  //mic.start() starts the recording
+  mic = new p5.AudioIn(); 
   mic.start();
+
+  //FFT (fast fourier transform) isolates individual audio frequencies within a waveform 
   fft = new p5.FFT();
-  fft.setInput(mic);
+  fft.setInput(mic); //Sets the input source for the FFT analysis
 }
 
-// runs every frame - 60 times per second
+//This function draws the "spectrogram",
+//it runs every frame (framerate = 60 times per sec)
 function draw() {
-  background(200);
-  let spectrum = fft.analyze(); // array of amplitudes in bins
-  drawSpectrum(spectrum);
-  let numberOfBins = spectrum.length;
+  background(200);  //background color
+
+  let spectrum = fft.analyze(); //returns array of amplitudes measured in bins
+  drawSpectrum(spectrum);       
+  let numberOfBins = spectrum.length;  //length of spectrum array is the number of bins in total
   let maxAmp = 0;
   let largestBin;
 
+  //finds the max amplitude, also meaning the largest bin
   for (let i = 0; i < numberOfBins; i++) {
-    let thisAmp = spectrum[i]; // amplitude of current bin
+    let thisAmp = spectrum[i]; //amplitude of current bin
     if (thisAmp > maxAmp) {
-      maxAmp = thisAmp;
+      maxAmp = thisAmp; 
       largestBin = i;
     }
   }
@@ -108,15 +130,17 @@ function draw() {
   }
 
 }
-function drawSpectrum(spectrum) {
-  //let spectrum = fft.analyze();
 
+//This function draws what the fft has analyzed
+function drawSpectrum(spectrum) {
   beginShape();
   for (i = 0; i < spectrum.length; i++) {
     vertex(i, map(spectrum[i], 0, 255, height, 0));
   }
   endShape();
 }
+
+//lav fra bin til billede
 let test = "";
 
 let encodedData = btoa(binaryToString(test.replace(/(.{8})/g, "$1 ")));
