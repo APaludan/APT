@@ -162,13 +162,14 @@ void add_bitstring_tone(int16_t *buffer, long int *n, long int bitDuration, char
 
     for (i = 0; i < 14; ++i){
         if (!strcmp(str,bitCombinations[i])){ //compares string to the possible bit combinations to find the correct index
-          combination = i; //kunne vi lave det her tilbage til break? det kan vi lige prøve
+          //combination = i; //kunne vi lave det her tilbage til break? det kan vi lige prøve
+          break;
         }
     }
 
     for (*n; *n < e; (*n)++)
     {
-        buffer[*n] = samples[combination+2][(*n) % bitDuration]; //samples[1] is the separation tone, meaning that the tones representing bit seqs have indices 2 through 15
+        buffer[*n] = samples[i+2][(*n) % bitDuration]; //samples[1] is the separation tone, meaning that the tones representing bit seqs have indices 2 through 15
     }
 }
 
