@@ -8,11 +8,11 @@
 
 //Modulation functions
 int _8fsk();
-int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int bitDuration, long binaryFileLen, int N);
+int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int bitDuration, long int binaryFileLen, int N);
 void add_separator_tone(int16_t *buffer, long int *n, long int bitDuration, int16_t **samples);
 void add_bitstring_tone(int16_t *buffer, long int *n, long int bitDuration, char *binaryBytes, long int j, int16_t **samples);
 void makeAudio(int16_t *buffer, long int N);
-int calcSamples(int16_t **samples, long int bitDuration, long int N, long binaryFileLen);
+int calcSamples(int16_t **samples, long int bitDuration, long int N, long int binaryFileLen);
 
 //int _bfsk();
 
@@ -51,7 +51,7 @@ int _8fsk()
 {
   char *binaryBytes, c;
   int index = 0;
-      //bitDuration is calculated by dividing the sample rate of the system with the framerate. eg: 44100 / 144 = 306.25 (INT 306)
+      //bitDuration is calculated by dividing the sample rate of the system with the framerate. eg: 44100 / 144 = 306.25 (INT 306) and multiplied by scalar (# of frames for each tone)
   long int bitDuration = 306*30; // duration of each bit (samples per bit)
 
   FILE *binaryFilePtr = fopen("../tempFiles/tempBinary.txt", "r");
@@ -66,12 +66,12 @@ int _8fsk()
   printf("Bitduration: %ld\n", bitDuration);
 
   fseek(binaryFilePtr, 0, SEEK_END);
-  long binaryFileLen = ftell(binaryFilePtr); //Tells the position of the pointer
+  long int binaryFileLen = ftell(binaryFilePtr); //Tells the position of the pointer
   fseek(binaryFilePtr, 0, SEEK_SET);
 
   printf("Binary file size: %ld\n", binaryFileLen);
 
-  binaryBytes = malloc(sizeof(char) * (binaryFileLen + 1));
+  binaryBytes = malloc(sizeof(char) * (binaryFileLen + 1)); //The parameter to malloc is of type size_t, which is an unsigned type. If you pass an argument of any other integer type, it will be implicitly converted to size_t. (https://stackoverflow.com/questions/43453452/using-long-int-as-a-parameter-for-malloc)
   if (binaryBytes == NULL)
   {
     printf("Input memory allocation error");
@@ -82,7 +82,9 @@ int _8fsk()
   fread(binaryBytes, binaryFileLen, 1, binaryFilePtr); 
   fclose(binaryFilePtr); //and closes file when done
 
-  long int N = 2 * binaryFileLen * bitDuration / 2.95; //number of samples
+  long int N = (long int)ceil((2 * binaryFileLen * bitDuration + bitDuration) / 3.); //number of samples including separation tones (er lige (14/5) rettet til 3, ret tilbage til 2.95 hvis det ikke virker)
+  //the number of sep tones is equal to the number of bit tones + 1
+
   /*
   - Each 1/0 is represented by a sound, that sound consists of bitDuration samples (binaryfilelen * bitduration)
   - 3 bits pr sound therefore divided by 2.95, almost 3
@@ -90,6 +92,7 @@ int _8fsk()
   */
 
   int16_t *buffer = malloc(3 * (N + 1) * sizeof(int16_t)); //buffer array
+  //kan vi gøre det mindre eller hvad?
   if (buffer == NULL)
   {
     printf("Audio buffer memory allocation error");
@@ -99,7 +102,8 @@ int _8fsk()
   //makeAudioBuffer skal returnere 1 ved fejl eller 0 ved succes
   if (makeAudioBuffer(buffer, binaryBytes, bitDuration, binaryFileLen, N))
     return 1;
-    free(binaryBytes);
+    
+  free(binaryBytes); //skal vi free'e før return 1; ? Og skal vi i så fald free'e alt inden de to return 1?
 
   makeAudio(buffer, N);
   free(buffer);
@@ -114,7 +118,7 @@ int _8fsk()
   return 0;
 }
 
-int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int bitDuration, long binaryFileLen, int N){
+int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int bitDuration, long int binaryFileLen, int N){
   long int n = 0, j = 0; 
   int16_t *samples[16];
 
@@ -125,7 +129,7 @@ int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int bitDuration, lo
   }
 
   add_separator_tone(buffer, &n, bitDuration, samples); //writes wake up tone to buffer
-  while (j < (int)binaryFileLen){ //writes tones to the buffer depending on combinations of three bits at a time. Every other tone is a separation tone (to make rx easier)
+  while (j < binaryFileLen){ //writes tones to the buffer depending on combinations of three bits at a time. Every other tone is a separation tone (to make rx easier)
     add_bitstring_tone(buffer, &n, bitDuration, binaryBytes, j, samples);
     add_separator_tone(buffer, &n, bitDuration, samples);
     j += 3;
@@ -148,7 +152,7 @@ void add_separator_tone(int16_t *buffer, long int *n, long int bitDuration, int1
 }
 
 void add_bitstring_tone(int16_t *buffer, long int *n, long int bitDuration, char *binaryBytes, long int j, int16_t **samples){
-    int i = 0, k = 0, combination = 0;
+    int i = 0, k = 0;
     char bitCombinations[14][4] = {"000", "001", "010", "100", "011", "101", "110", "111",
                                    "00", "01", "10", "11",
                                    "0", "1"
@@ -173,12 +177,12 @@ void add_bitstring_tone(int16_t *buffer, long int *n, long int bitDuration, char
     }
 }
 
-int calcSamples(int16_t **samples, long int bitDuration, long int N, long binaryFileLen)
+int calcSamples(int16_t **samples, long int bitDuration, long int N, long int binaryFileLen)
 {
   double amp = 16383.0; // amplitude
   double f_s = 44000.0;        // sampling frequency 
   double freq = 440.0;        // frequency of sine wave
-  int seconds = N / f_s;  //  second calculation used in calculation of bps
+  int seconds = N / f_s;  //  second calculation used in calculation of bps (length of output sound file)
   int bps = binaryFileLen / seconds;  //  calculation for bps
   double p2f_s = 2.0 * M_PI / f_s;
 

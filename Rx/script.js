@@ -1,7 +1,7 @@
 //Global variables ooops 
 let mic, fft, spec = [],  j = 0, recording = false;
-const validFreqs = [440, 880, 1320, 1760, 2200, 2640, 3080, 3520, 3960, 4400];
-const bits = ['', '010', '000', '100', '001', '110', '101', '', '011', '111'];
+const validFreqs = [440, 880, 1320, 1760, 2200, 2640, 3080, 3520, 3960, 4400]; //skal matche de freq vi sender ved (14 eller 15)
+const bits = ['', '010', '000', '100', '001', '110', '101', '', '011', '111']; //skal matche arrayet fra Tx
 
 
 //-----------------
@@ -56,7 +56,7 @@ document.getElementById("startpause").addEventListener("click", () => {
   //spec[] is now filled up with loudest freqs 
   //if not recording start by comparing spec[0] **
   if (!recording) {
-    while (!compare(spec[0], 400, 480)) {
+    while (!compare(spec[0], 400, 480)) { //sort out background noise before signal has started
       spec.shift();
     }
     while (spec.length > 1) {
@@ -66,7 +66,8 @@ document.getElementById("startpause").addEventListener("click", () => {
       while (compare(spec[0], 400, 480)) {
         spec.shift();
       }
-      let prev = spec[0];
+
+      let prev = spec[0]; //prev burde hedde current.. og er den første tone efter separation tone
       if (isValidFreq(spec[0])) {
         identifiedFreqs.push(isValidFreq(spec[0]));
         bitstring += freqToBits(identifiedFreqs[identifiedFreqs.length - 1]);
