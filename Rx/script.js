@@ -1,7 +1,9 @@
 //Global variables ooops 
 let mic, fft, spec = [],  j = 0, recording = false;
-const validFreqs = [440, 880, 1320, 1760, 2200, 2640, 3080, 3520, 3960, 4400]; //skal matche de freq vi sender ved (14 eller 15)
-const bits = ['', '010', '000', '100', '001', '110', '101', '', '011', '111']; //skal matche arrayet fra Tx
+const validFreqs = [880, 1320, 1760, 2200, 2640, 3080, 3520, 3960, 4400, 4840, 5280, 5720, 6160, 6600]; //skal matche de freq vi sender ved (14 toner). Separator tone behøver IKKE inkluderes
+const bitCombinations = [ "000", "001", "010", "100", "011", "101", "110", "111",
+                          "00", "01", "10", "11",
+                          "0", "1"]; //skal matche arrayet fra Tx
 
 
 //-----------------
@@ -37,10 +39,10 @@ function isValidFreq(freq) {
 function freqToBits(freq) {
   for (let i = 0; i < validFreqs.length; i++) {
     if (validFreqs[i] === freq) {
-      return bits[i];
+      return bitCombinations[i];
     }
   }
-  return 'nej';
+  return 'XXX';
 }
 
 //MANGLER 
