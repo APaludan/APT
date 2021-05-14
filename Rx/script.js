@@ -110,7 +110,7 @@ function setup() {
 }
 
 //This function draws the "spectrogram",
-//it runs every frame (framerate = 60 times per sec)
+//it runs every frame (framerate = 60 or 144 times per sec)
 function draw() {
   background(200);  //background color
 
@@ -128,9 +128,9 @@ function draw() {
       largestBin = i;
     }
   }
-  //calculates the loudest frequency
+  //calculates the loudest frequency once per frame (e.g., 60 or 144 times pr second)
   //Samplerate returns the samples per sec, samplerate = sampling frequency
-  let loudestFreq = largestBin * (sampleRate() / numberOfBins) / 2;  
+  let loudestFreq = largestBin * (sampleRate() / numberOfBins) / 2;  //mangler forklaring på beregning
   if (recording == true) {
     spec[j] = loudestFreq;
     j++;
