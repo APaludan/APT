@@ -43,13 +43,18 @@ function freqToBits(freq) {
   return 'nej';
 }
 
-//MANGLER
+//MANGLER 
 document.getElementById("startpause").addEventListener("click", () => {
   recording = !recording;
-  console.log(recording);
-  console.log(spec);
+  console.log(recording); //console.log is recording true or false
+  console.log(spec); //console.log the spec array
+
+  //empty array and string for holding the collected freqs and converting to bits
   let identifiedFreqs = [];
   let bitstring = '';
+  
+  //spec[] is now filled up with loudest freqs 
+  //if not recording start by comparing spec[0] **
   if (!recording) {
     while (!compare(spec[0], 400, 480)) {
       spec.shift();
