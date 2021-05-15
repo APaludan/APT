@@ -56,7 +56,7 @@ document.getElementById("startpause").addEventListener("click", () => {
   let bitstring = '';
   
   //spec[] is now filled up with loudest freqs 
-  //if not recording start by comparing spec[0] **
+  //if not recording start by comparing spec[0] 
   if (!recording) {
     while (!compare(spec[0], 400, 480)) { //sort out background noise before signal has started
       spec.shift();

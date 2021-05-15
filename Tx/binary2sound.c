@@ -166,7 +166,6 @@ void add_bitstring_tone(int16_t *buffer, long int *n, long int bitDuration, char
 
     for (i = 0; i < 14; ++i){
         if (!strcmp(str,bitCombinations[i])){ //compares string to the possible bit combinations to find the correct index
-          //combination = i; //kunne vi lave det her tilbage til break? det kan vi lige prøve
           break;
         }
     }
