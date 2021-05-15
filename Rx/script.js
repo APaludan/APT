@@ -157,6 +157,7 @@ function drawSpectrum(spectrum) {
 //-------------
 
 //MANGLER
+//https://stackoverflow.com/questions/21354235/converting-binary-to-text-using-javascript
 let test = "";
 
 let encodedData = btoa(binaryToString(test.replace(/(.{8})/g, "$1 ")));
