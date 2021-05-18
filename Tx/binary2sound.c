@@ -207,6 +207,7 @@ int calcSamples(int16_t **samples, long int bitDuration, long int N, long int bi
   return 0;
 }
 
+// source: https://batchloaf.wordpress.com/2017/02/10/a-simple-way-to-read-and-write-audio-and-video-files-in-c-using-ffmpeg/
 void makeAudio(int16_t *buffer, long int N)
 {
   // Pipe the audio data to ffmpeg, which writes it to an audio file (wav/flac..)
@@ -214,8 +215,7 @@ void makeAudio(int16_t *buffer, long int N)
     fwrite(buffer, 2, N, audioPtr);
     pclose(audioPtr);
 }
-
-// source: https://batchloaf.wordpress.com/2017/02/10/a-simple-way-to-read-and-write-audio-and-video-files-in-c-using-ffmpeg/ 
+ 
 /*int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int binaryFileLen, int bitDuration, int N)
 {
   long int n = 0; // buffer index
