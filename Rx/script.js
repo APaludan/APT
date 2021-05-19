@@ -65,7 +65,7 @@ document.getElementById("startpause").addEventListener("click", () => {
       while (!isValidFreq(spec[0])) {
         spec.shift();
       }
-      while (compare(spec[0], 400, 480)) {
+      while (compare(spec[0], 400, 480)) { //kan det fjernes og at der laves en else istedet?
         spec.shift();
       }
 
@@ -160,7 +160,6 @@ function drawSpectrum(spectrum) {
 //For converting the binary data back to an image
 //-------------
 
-//MANGLER
 //https://stackoverflow.com/questions/21354235/converting-binary-to-text-using-javascript
 let binary = "";
 
