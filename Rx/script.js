@@ -65,7 +65,7 @@ document.getElementById("startpause").addEventListener("click", () => {
       while (!isValidFreq(spec[0])) {
         spec.shift();
       }
-      while (compare(spec[0], 400, 480)) {
+      while (compare(spec[0], 400, 480)) { //kan det fjernes og at der laves en else istedet?
         spec.shift();
       }
 
