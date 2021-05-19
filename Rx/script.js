@@ -13,7 +13,7 @@ const bitCombinations = [ "000", "001", "010", "100", "011", "101", "110", "111"
 
 //This function compares the x to the min and the max value
 //it returns true if x i within the limit, else false
-function compare(x, min, max) {
+function compare(x, min, max) { 
   if (x > min && x < max) {
     return true;
   }
@@ -120,7 +120,7 @@ function draw() {
   drawSpectrum(spectrum);       
   let numberOfBins = spectrum.length;  //length of spectrum array is the number of bins in total
   let maxAmp = 0;
-  let largestBin;
+  let largestBin; 
 
   //finds the bin that holds the max amplitude
   for (let i = 0; i < numberOfBins; i++) {
@@ -132,7 +132,11 @@ function draw() {
   }
   //calculates the loudest frequency once per frame (e.g., 60 or 144 times pr second)
   //Samplerate returns the samples per sec, samplerate = sampling frequency
-  let loudestFreq = largestBin * (sampleRate() / numberOfBins) / 2;  //mangler forklaring på beregning
+  let loudestFreq = largestBin * (sampleRate() / numberOfBins) / 2; 
+  //we take the largestBin which contains the index with the larges value,
+  //so to find this value u take the sample rate and divide it with 2 to get the frequencies humans can hear. 
+  //Then we divide it with the number of bins to get the frequencies in the loudestBin.
+ 
   if (recording == true) {
     spec[j] = loudestFreq;
     j++;
