@@ -9,8 +9,8 @@
 //Modulation functions
 int _8fsk();
 int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int bitDuration, long int binaryFileLen, int N);
-void add_separator_tone(int16_t *buffer, long int *n, long int bitDuration, int16_t **samples);
-void add_bitstring_tone(int16_t *buffer, long int *n, long int bitDuration, char *binaryBytes, long int j, int16_t **samples, long int binaryFileLen);
+void addSeparatorTone(int16_t *buffer, long int *n, long int bitDuration, int16_t **samples);
+void addBitstringTone(int16_t *buffer, long int *n, long int bitDuration, char *binaryBytes, long int j, int16_t **samples, long int binaryFileLen);
 void makeAudio(int16_t *buffer, long int N);
 int calcSamples(int16_t **samples, long int bitDuration, long int N, long int binaryFileLen);
 
@@ -128,16 +128,16 @@ int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int bitDuration, lo
     return 1;
   }
 
-  add_separator_tone(buffer, &n, bitDuration, samples); //writes wake up tone to buffer
+  addSeparatorTone(buffer, &n, bitDuration, samples); //writes wake up tone to buffer
   while (j < binaryFileLen){ //writes tones to the buffer depending on combinations of three bits at a time. Every other tone is a separation tone (to make rx easier)
-    add_bitstring_tone(buffer, &n, bitDuration, binaryBytes, j, samples, binaryFileLen);
-    add_separator_tone(buffer, &n, bitDuration, samples);
+    addBitstringTone(buffer, &n, bitDuration, binaryBytes, j, samples, binaryFileLen);
+    addSeparatorTone(buffer, &n, bitDuration, samples);
     j += 3;
   }
   return 0;
 }
 
-void add_separator_tone(int16_t *buffer, long int *n, long int bitDuration, int16_t **samples){ //skriver en separator-tone (440 Hz) ind i buffer
+void addSeparatorTone(int16_t *buffer, long int *n, long int bitDuration, int16_t **samples){ //skriver en separator-tone (440 Hz) ind i buffer
     long int e = (*n) + bitDuration; //is used in the for loop as the upper bound for n, as the number of samples for each bit sequence/separation tone should be equal to the bitDuration measured in samples
     
     for (*n; *n < e; (*n)++)
@@ -151,7 +151,7 @@ void add_separator_tone(int16_t *buffer, long int *n, long int bitDuration, int1
     }
 }
 
-void add_bitstring_tone(int16_t *buffer, long int *n, long int bitDuration, char *binaryBytes, long int j, int16_t **samples, long int binaryFileLen){
+void addBitstringTone(int16_t *buffer, long int *n, long int bitDuration, char *binaryBytes, long int j, int16_t **samples, long int binaryFileLen){
     int i = 0, k = 0;
     char bitCombinations[14][4] = {"000", "001", "010", "100", "011", "101", "110", "111",
                                    "00", "01", "10", "11",
