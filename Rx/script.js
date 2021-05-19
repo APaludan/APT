@@ -156,7 +156,6 @@ function drawSpectrum(spectrum) {
 //For converting the binary data back to an image
 //-------------
 
-//MANGLER
 //https://stackoverflow.com/questions/21354235/converting-binary-to-text-using-javascript
 let binary = "";
 
