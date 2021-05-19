@@ -158,13 +158,15 @@ function drawSpectrum(spectrum) {
 
 //MANGLER
 //https://stackoverflow.com/questions/21354235/converting-binary-to-text-using-javascript
-let test = "";
+let binary = "";
 
-let encodedData = btoa(binaryToString(test.replace(/(.{8})/g, "$1 ")));
+let encodedData = btoa(binaryToString(binary.replace(/(.{8})/g, "$1 ")));
+//Btoa() is a method that encodes a string in base-64.
 console.log(encodedData);
 
 document.getElementById("img").src = "data:image/gif;base64," + encodedData;
 
+//Before btoa can be used, the binary data needs to be converted to a string
 function binaryToString(str) {
   let newBin = str.split(" ");
   let binCode = [];
