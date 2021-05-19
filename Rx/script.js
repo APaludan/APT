@@ -144,7 +144,7 @@ function drawSpectrum(spectrum) {
   //begin- and endshape begins and stops recording vertices for a shape
   beginShape();
   for (i = 0; i < spectrum.length; i++) {
-    vertex(i, map(spectrum[i], 0, 255, height, 0)); //i = x-coordinate of vertex, map(..) = y-coordinate 
+    vertex(i*(width/spectrum.length), map(spectrum[i], 0, 255, height, 0)); //i = x-coordinate of vertex, map(..) = y-coordinate 
     //map(value, start1_cur, stop1_cur, start2_targ, stop2_targ) it re-maps a number from one range to another
   }
   endShape();
