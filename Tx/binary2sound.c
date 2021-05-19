@@ -177,6 +177,7 @@ void add_bitstring_tone(int16_t *buffer, long int *n, long int bitDuration, char
     }
 }
 
+// source: https://batchloaf.wordpress.com/2017/02/10/a-simple-way-to-read-and-write-audio-and-video-files-in-c-using-ffmpeg/
 int calcSamples(int16_t **samples, long int bitDuration, long int N, long int binaryFileLen)
 {
   double amp = 16383.0; // amplitude
