@@ -60,8 +60,8 @@ document.getElementById("startpause").addEventListener("click", () => {
   if (!recording) {
     while (!compare(spec[0], 400, 480)) { //sort out background noise before signal has started
       spec.shift();
-      if (!(compare(spec[1],400,480) && compare(spec[2],400,480)))
-        spec[1] = 0;
+      if (!(compare(spec[1],400,480) && compare(spec[2],400,480))) //if not the two following are separator tone:
+        spec[1] = 0; //spec[1] will be set to 0, to avoid a false registration of separator tone if noise is equal to separator tone
     }
     while (spec.length > 1) {
       while (!isValidFreq(spec[0])) {
@@ -73,7 +73,7 @@ document.getElementById("startpause").addEventListener("click", () => {
         identifiedFreqs.push(isValidFreq(spec[0]));
         bitstring += freqToBits(identifiedFreqs[identifiedFreqs.length - 1]);
       }
-      while (compare(spec[0], prev - 40, prev + 40)) {
+      while (compare(spec[0], isValidFreq(prev) - 40, isValidFreq(prev) + 40)) {
         spec.shift();
       }
     }
