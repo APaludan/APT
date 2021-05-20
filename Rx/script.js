@@ -48,7 +48,7 @@ function freqToBits(freq) {
 //MANGLER 
 document.getElementById("startpause").addEventListener("click", () => {
   recording = !recording;
-  console.log(recording); //console.log is recording true or false
+  console.log("recording: " + recording); //console.log is recording true or false
   console.log(spec); //console.log the spec array
 
   //empty array and string for holding the collected freqs and converting to bits
@@ -59,23 +59,23 @@ document.getElementById("startpause").addEventListener("click", () => {
   //if not recording start by comparing spec[0]
   let x = 0; 
   if (!recording) {
-    while (!compare(spec[x], 400, 480)) { //sort out background noise before signal has started
+    while (!compare(spec[x], 400, 480) && x < spec.length) { //sort out background noise before signal has started
       x++;
     }
-    while (x < spec.length - 1) {
-      while (!isValidFreq(spec[x]) && x < spec.length - 1) {
+    while (x < spec.length) {
+      while (!isValidFreq(spec[x]) && x < spec.length) {
         x++;
       }
-      while (compare(spec[x], 400, 480) && x < spec.length - 1) { //kan det fjernes og at der laves en else istedet?
+      while (compare(spec[x], 400, 480) && x < spec.length) { //kan det fjernes og at der laves en else istedet?
         x++;
       }
 
-      let prev = spec[x]; //prev burde hedde current.. og er den første tone efter separation tone
-      if (isValidFreq(spec[x])) {
+      let current = spec[x];
+        if (isValidFreq(spec[x])) {
         identifiedFreqs.push(isValidFreq(spec[x]));
         bitstring += freqToBits(identifiedFreqs[identifiedFreqs.length - 1]);
       }
-      while (compare(spec[x], prev - 40, prev + 40) && x < spec.length - 1) {
+      while (compare(spec[x], current - 40, current + 40) && x < spec.length) {
         x++;
       }
     }
@@ -87,6 +87,7 @@ document.getElementById("startpause").addEventListener("click", () => {
 document.getElementById("reset").addEventListener("click", () => {
   spec.length = 0;
   j = 0;
+  x = 0;
   console.log("reset!");
 });
 
