@@ -191,12 +191,15 @@ function showImage(bitstring) {
     }
     return binCode.join("");
   }
-}/*
+}
+//Source:
 //https://stackoverflow.com/questions/21354235/converting-binary-to-text-using-javascript
+//https://stackoverflow.com/questions/1772941/how-can-i-insert-a-character-after-every-n-characters-in-javascript
+/*
+
 let binary = "";
 
 let encodedData = btoa(binaryToString(binary.replace(/(.{8})/g, "$1 "))); //inside replace, it puts a space between every 8th character
-//https://stackoverflow.com/questions/1772941/how-can-i-insert-a-character-after-every-n-characters-in-javascript
 //Btoa() is a method that encodes a string in base-64.
 console.log(encodedData);
 
