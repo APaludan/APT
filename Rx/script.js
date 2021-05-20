@@ -56,26 +56,27 @@ document.getElementById("startpause").addEventListener("click", () => {
   let bitstring = '';
   
   //spec[] is now filled up with loudest freqs 
-  //if not recording start by comparing spec[0] 
+  //if not recording start by comparing spec[0]
+  let x = 0; 
   if (!recording) {
-    while (!compare(spec[0], 400, 480)) { //sort out background noise before signal has started
-      spec.shift();
+    while (!compare(spec[x], 400, 480)) { //sort out background noise before signal has started
+      x++;
     }
-    while (spec.length > 1) {
-      while (!isValidFreq(spec[0])) {
-        spec.shift();
+    while (x < spec.length - 1) {
+      while (!isValidFreq(spec[x]) && x < spec.length - 1) {
+        x++;
       }
-      while (compare(spec[0], 400, 480)) { //kan det fjernes og at der laves en else istedet?
-        spec.shift();
+      while (compare(spec[x], 400, 480) && x < spec.length - 1) { //kan det fjernes og at der laves en else istedet?
+        x++;
       }
 
-      let prev = spec[0]; //prev burde hedde current.. og er den første tone efter separation tone
-      if (isValidFreq(spec[0])) {
-        identifiedFreqs.push(isValidFreq(spec[0]));
+      let prev = spec[x]; //prev burde hedde current.. og er den første tone efter separation tone
+      if (isValidFreq(spec[x])) {
+        identifiedFreqs.push(isValidFreq(spec[x]));
         bitstring += freqToBits(identifiedFreqs[identifiedFreqs.length - 1]);
       }
-      while (compare(spec[0], prev - 40, prev + 40)) {
-        spec.shift();
+      while (compare(spec[x], prev - 40, prev + 40) && x < spec.length - 1) {
+        x++;
       }
     }
     console.log(identifiedFreqs);
