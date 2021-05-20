@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
 	//documentation for FFmpeg: https://ffmpeg.org/ffmpeg.html 
 
 	//Converts image file to binary text file
-	system("image2binary.exe ../tempFiles/tempImage_compressed.jpeg ../tempFiles/tempBinary.txt");
+	system("image2binary.exe ../tempFiles/u.bmp ../tempFiles/tempBinary.txt");
 	
 	//Converts binary text file to sound
 	system("binary2sound.exe -modulationScheme 8fsk");
