@@ -45,7 +45,7 @@ function freqToBits(freq) {
   return 'XXX';
 }
 
-//MANGLER 
+//Record/stop -> identify the different frequencies 
 document.getElementById("startpause").addEventListener("click", () => {
   recording = !recording;
   console.log(recording); //console.log is recording true or false
