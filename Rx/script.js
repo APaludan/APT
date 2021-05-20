@@ -60,7 +60,7 @@ document.getElementById("startpause").addEventListener("click", () => {
   //spec[] is now filled up with loudest freqs 
   //if not recording start by comparing spec[0]
   if (!recording) {
-    let x = 0;
+    let x = 0, current = 0;
     console.log(spec);
     while (!((compare(spec[x], 400, 480) && compare(spec[x + 1], 400, 480))) && x < spec.length) { //sort out background noise before signal has started
       x++;
@@ -81,7 +81,7 @@ document.getElementById("startpause").addEventListener("click", () => {
         x++;
       }
 
-      let current = spec[x];
+      current = spec[x];
       if (isValidFreq(spec[x]) && seperator) {
         seperator = false;
         identifiedFreqs.push(isValidFreq(spec[x]));
@@ -90,9 +90,10 @@ document.getElementById("startpause").addEventListener("click", () => {
           x++;
         }
       }
+      console.log("x: " + x);
     }
     console.log(identifiedFreqs);
-    console.log(bitstring);
+    console.log("bitstring: " + bitstring);
     showImage(bitstring);
   }
 });
@@ -182,7 +183,7 @@ function showImage(bitstring) {
   //Btoa() is a method that encodes a string in base-64.
   console.log(encodedData);
 
-  document.getElementById("img").src = "data:image/gif;base64," + encodedData;
+  document.getElementById("img").src = "data:image/bmp;base64," + encodedData;
 
   //Before btoa can be used, the binary data needs to be converted to a string
   function binaryToString(str) {
