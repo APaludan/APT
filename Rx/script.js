@@ -59,12 +59,16 @@ document.getElementById("startpause").addEventListener("click", () => {
   //if not recording start by comparing spec[0]
   if (!recording) {
     let x = 0;
-    while (!compare(spec[x], 400, 480) && x < spec.length) { //sort out background noise before signal has started
+    console.log(spec);
+    while (!((compare(spec[x],400,480) && compare(spec[x+1],400,480))) && x < spec.length) { //sort out background noise before signal has started
       x++;
     }
+    console.log("x: ", x);
     while (x < spec.length) {
-      while (!isValidFreq(spec[x]) && x < spec.length) {
+      while (!isValidFreq(spec[x]) && x < spec.length && !compare(spec[x], 400, 480)) {
         x++;
+        if (!isValidFreq(spec[x]) && x < spec.length && !compare(spec[x], 400, 480))
+          x = spec.length; //if x and x+1 is not valid, skip all.
       }
       while (compare(spec[x], 400, 480) && x < spec.length) { //kan det fjernes og at der laves en else istedet?
         x++;
@@ -139,7 +143,7 @@ function draw() {
   //we take the largestBin which contains the index with the larges value,
   //so to find this value u take the sample rate and divide it with 2 to get the frequencies humans can hear. 
   //Then we divide it with the number of bins to get the frequencies in the loudestBin.
- 
+  
   if (recording == true) {
     spec[j] = loudestFreq;
     j++;
