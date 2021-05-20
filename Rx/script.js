@@ -174,7 +174,24 @@ function drawSpectrum(spectrum) {
 //------------
 //For converting the binary data back to an image
 //-------------
+function showImage(bitstring) {
+  let encodedData = btoa(binaryToString(bitstring.replace(/(.{8})/g, "$1 ")));
+  //Btoa() is a method that encodes a string in base-64.
+  console.log(encodedData);
 
+  document.getElementById("img").src = "data:image/bmp;base64," + encodedData;
+
+  //Before btoa can be used, the binary data needs to be converted to a string
+  function binaryToString(str) {
+    let newBin = str.split(" ");
+    let binCode = [];
+
+    for (i = 0; i < newBin.length; i++) {
+      binCode.push(String.fromCharCode(parseInt(newBin[i], 2)));
+    }
+    return binCode.join("");
+  }
+}/*
 //https://stackoverflow.com/questions/21354235/converting-binary-to-text-using-javascript
 let binary = "";
 
@@ -194,7 +211,7 @@ function binaryToString(str) {
     binCode.push(String.fromCharCode(parseInt(newBin[i], 2)));
   }
   return binCode.join("");
-}
+}*/
 
 //----------------------
 /* document.getElementById("startpause").addEventListener("click", () => {
