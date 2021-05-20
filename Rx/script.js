@@ -104,50 +104,6 @@ document.getElementById("reset").addEventListener("click", () => {
   console.log("reset!");
 });
 
-//----------------------
-/* document.getElementById("startpause").addEventListener("click", () => {
-  recording = !recording;
-  console.log(recording); //console.log is recording true or false
-  console.log(spec); //console.log the spec array
-
-  //empty array and string for holding the collected freqs and converting to bits
-  let identifiedFreqs = [];
-  let bitstring = '';
-  
-  //spec[] is now filled up with loudest freqs 
-  //if not recording start by comparing spec[0] 
-  if (!recording) {
-    while (!compare(spec[0], 400, 480)) { //sort out background noise before signal has started
-      spec.shift();
-      if (!(compare(spec[1],400,480) && compare(spec[2],400,480))) //if not the two following are separator tone:
-        spec[1] = 0; //spec[1] will be set to 0, to avoid a false registration of separator tone if noise is equal to separator tone
-    }
-    while (spec.length > 1) {
-      while (!isValidFreq(spec[0])) {
-        spec.shift();
-      }
-
-      let prev = spec[0]; //prev burde hedde current.. og er den første tone efter separation tone
-      if (isValidFreq(spec[0])) {
-        identifiedFreqs.push(isValidFreq(spec[0]));
-        bitstring += freqToBits(identifiedFreqs[identifiedFreqs.length - 1]);
-      }
-      while (compare(spec[0], isValidFreq(prev) - 40, isValidFreq(prev) + 40)) {
-        spec.shift();
-      }
-    }
-    console.log(identifiedFreqs);
-    console.log(bitstring);
-  }
-});
-//when reset button clicked, the spec.length and j will be set to 0
-document.getElementById("reset").addEventListener("click", () => {
-  spec.length = 0;
-  j = 0;
-  console.log("reset!");
-});
-*/
-
 
 //-----------------
 //Functions for drawing and analyzing the sound
@@ -239,3 +195,47 @@ function binaryToString(str) {
   }
   return binCode.join("");
 }
+
+//----------------------
+/* document.getElementById("startpause").addEventListener("click", () => {
+  recording = !recording;
+  console.log(recording); //console.log is recording true or false
+  console.log(spec); //console.log the spec array
+
+  //empty array and string for holding the collected freqs and converting to bits
+  let identifiedFreqs = [];
+  let bitstring = '';
+  
+  //spec[] is now filled up with loudest freqs 
+  //if not recording start by comparing spec[0] 
+  if (!recording) {
+    while (!compare(spec[0], 400, 480)) { //sort out background noise before signal has started
+      spec.shift();
+      if (!(compare(spec[1],400,480) && compare(spec[2],400,480))) //if not the two following are separator tone:
+        spec[1] = 0; //spec[1] will be set to 0, to avoid a false registration of separator tone if noise is equal to separator tone
+    }
+    while (spec.length > 1) {
+      while (!isValidFreq(spec[0])) {
+        spec.shift();
+      }
+
+      let prev = spec[0]; //prev burde hedde current.. og er den første tone efter separation tone
+      if (isValidFreq(spec[0])) {
+        identifiedFreqs.push(isValidFreq(spec[0]));
+        bitstring += freqToBits(identifiedFreqs[identifiedFreqs.length - 1]);
+      }
+      while (compare(spec[0], isValidFreq(prev) - 40, isValidFreq(prev) + 40)) {
+        spec.shift();
+      }
+    }
+    console.log(identifiedFreqs);
+    console.log(bitstring);
+  }
+});
+//when reset button clicked, the spec.length and j will be set to 0
+document.getElementById("reset").addEventListener("click", () => {
+  spec.length = 0;
+  j = 0;
+  console.log("reset!");
+});
+*/
