@@ -57,8 +57,8 @@ document.getElementById("startpause").addEventListener("click", () => {
   
   //spec[] is now filled up with loudest freqs 
   //if not recording start by comparing spec[0]
-  let x = 0; 
   if (!recording) {
+    let x = 0;
     while (!compare(spec[x], 400, 480) && x < spec.length) { //sort out background noise before signal has started
       x++;
     }
@@ -81,6 +81,7 @@ document.getElementById("startpause").addEventListener("click", () => {
     }
     console.log(identifiedFreqs);
     console.log(bitstring);
+    showImage(bitstring);
   }
 });
 //when reset button clicked, the spec.length and j will be set to 0
@@ -163,21 +164,22 @@ function drawSpectrum(spectrum) {
 //-------------
 
 //https://stackoverflow.com/questions/21354235/converting-binary-to-text-using-javascript
-let binary = "";
 
-let encodedData = btoa(binaryToString(binary.replace(/(.{8})/g, "$1 ")));
-//Btoa() is a method that encodes a string in base-64.
-console.log(encodedData);
-
-document.getElementById("img").src = "data:image/gif;base64," + encodedData;
-
-//Before btoa can be used, the binary data needs to be converted to a string
-function binaryToString(str) {
-  let newBin = str.split(" ");
-  let binCode = [];
-
-  for (i = 0; i < newBin.length; i++) {
-    binCode.push(String.fromCharCode(parseInt(newBin[i], 2)));
+function showImage(bitstring) {
+  let encodedData = btoa(binaryToString(bitstring.replace(/(.{8})/g, "$1 ")));
+  //Btoa() is a method that encodes a string in base-64.
+  console.log(encodedData);
+  
+  document.getElementById("img").src = "data:image/gif;base64," + encodedData;
+  
+  //Before btoa can be used, the binary data needs to be converted to a string
+  function binaryToString(str) {
+    let newBin = str.split(" ");
+    let binCode = [];
+    
+    for (i = 0; i < newBin.length; i++) {
+      binCode.push(String.fromCharCode(parseInt(newBin[i], 2)));
+    }
+    return binCode.join("");
   }
-  return binCode.join("");
 }
