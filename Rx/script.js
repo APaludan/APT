@@ -60,12 +60,11 @@ document.getElementById("startpause").addEventListener("click", () => {
   if (!recording) {
     while (!compare(spec[0], 400, 480)) { //sort out background noise before signal has started
       spec.shift();
+      if (!(compare(spec[1],400,480) && compare(spec[2],400,480)))
+        spec[1] = 0;
     }
     while (spec.length > 1) {
       while (!isValidFreq(spec[0])) {
-        spec.shift();
-      }
-      while (compare(spec[0], 400, 480)) { //kan det fjernes og at der laves en else istedet?
         spec.shift();
       }
 
