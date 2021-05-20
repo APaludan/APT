@@ -60,7 +60,7 @@ document.getElementById("startpause").addEventListener("click", () => {
   //spec[] is now filled up with loudest freqs 
   //if not recording start by comparing spec[0]
   if (!recording) {
-    let x = 0, current = 0;
+    let x = 0, current;
     console.log(spec);
     while (!((compare(spec[x], 400, 480) && compare(spec[x + 1], 400, 480))) && x < spec.length) { //sort out background noise before signal has started
       x++;
@@ -70,12 +70,14 @@ document.getElementById("startpause").addEventListener("click", () => {
       let seperator = false;
       while (!isValidFreq(spec[x]) && x < spec.length && !compare(spec[x], 400, 480)) {
         x++;
-        if (!isValidFreq(spec[x]) && x < spec.length && !compare(spec[x], 400, 480))
-          x = spec.length; //if x and x+1 is not valid, skip all.
+        if (!isValidFreq(spec[x]) && x < spec.length && !compare(spec[x], 400, 480)) {
+          //x = spec.length; //if x and x+1 is not valid, skip all.
+        }
       }
       while (compare(spec[x], 400, 480) && x < spec.length) { //kan det fjernes og at der laves en else istedet?
         seperator = true;
         x++;
+        console.log(x);
       }
       while (!seperator && compare(spec[x], current - 40, current + 40) && x < spec.length) {
         x++;
@@ -86,11 +88,11 @@ document.getElementById("startpause").addEventListener("click", () => {
         seperator = false;
         identifiedFreqs.push(isValidFreq(spec[x]));
         bitstring += freqToBits(identifiedFreqs[identifiedFreqs.length - 1]);
+        console.log("x: " + x + "freq: " + identifiedFreqs[identifiedFreqs.length-1]);
         while (compare(spec[x], current - 40, current + 40) && x < spec.length) {
           x++;
         }
       }
-      console.log("x: " + x);
     }
     console.log(identifiedFreqs);
     console.log("bitstring: " + bitstring);
