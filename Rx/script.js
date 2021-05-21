@@ -164,11 +164,12 @@ function draw() {
   //so to find this value u take the sample rate and divide it with 2 to get the frequencies humans can hear. 
   //Then we divide it with the number of bins to get the frequencies in the loudestBin.
 
-  if (compare(loudestFreq, 400, 480))
+  if (compare(loudestFreq, 400, 480)) {
     if (recording = false)
       recording = !recording;
     console.log("wakeup tone detected. recording started");
     record;
+  }
   if (recording == true) {
     spec[j] = loudestFreq;
     j++;
