@@ -201,10 +201,10 @@ int calcSamples(int16_t **samples, long int bitDuration, long int N, long int bi
   }
 
     //  prints the initial binary file length, duration of audio file and bit rate
-    printf("Input len: %d\n", binaryFileLen);
-    printf("N: %ld\n", N);
-    printf("Seconds: %d\n", seconds);
-    printf("bps: %d\n", bps);
+    printf("Input length: %d\n", binaryFileLen);
+    printf("Sample count: %ld\n", N);
+    printf("Audio duration: %d\n", seconds);
+    printf("Bitrate (/s): %d\n", bps);
   return 0;
 }
 
