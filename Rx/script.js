@@ -70,8 +70,8 @@ document.getElementById("startpause").addEventListener("click", () => {
     while (x < spec.length) { 
       while (!isValidFreq(spec[x]) && x < spec.length && !compare(spec[x], 400, 480)) {
         x++;
-        if (!isValidFreq(spec[x]) && x < spec.length && !compare(spec[x], 400, 480)) {
-          //x = spec.length; //if x and x+1 is not valid, skip all.
+        if (!isValidFreq(spec[x]) && !isValidFreq(spec[x+1]) && x < spec.length && !compare(spec[x], 400, 480)) {
+          x = spec.length; //if x and x+1 are not valid, skip all.
         } //hvad sker der her, hvorfor er der både while og if haha
       }
       while (compare(spec[x], 400, 480) && x < spec.length) { 
