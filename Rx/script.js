@@ -165,7 +165,10 @@ function draw() {
   //Then we divide it with the number of bins to get the frequencies in the loudestBin.
 
   if (compare(loudestFreq, 400, 480))
-    recording = !recording;
+    if (recording = false)
+      recording = !recording;
+    console.log("wakeup tone detected. recording started");
+    record;
   if (recording == true) {
     spec[j] = loudestFreq;
     j++;
