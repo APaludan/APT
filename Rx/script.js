@@ -133,7 +133,8 @@ function setup() {
 //This function draws the "spectrogram",
 //it runs every frame (framerate = 60 or 144 times per sec)
 function draw() {
-  background(200);  //background color
+  background(0);  //background color
+  stroke(255,255,255);
 
   let spectrum = fft.analyze(); //returns array of amplitudes referred to as bins
   drawSpectrum(spectrum);       

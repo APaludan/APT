@@ -41,16 +41,19 @@
   }
 
   #defaultCanvas0{
-    border: 3px solid green;
+    /*border: 3px solid green;*/
     
-
-
   }
+
   body{
-    background-image: url("stuckunderwater.jpg");
+   /* background-image: url("stuckunderwater.jpg");*/
+   background-color: black;
     background-size: au;
     background-repeat: no-repeat;
     
+  }
 
+  #space2{
+      font-size: 50px;
 
   }
