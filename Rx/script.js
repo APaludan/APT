@@ -117,7 +117,7 @@ document.getElementById("reset").addEventListener("click", () => {
 
 //a p5.js function, that runs only once (when the page loads)
 function setup() {
-  createCanvas(1200, 600); //creates canvas, dimensions: 1000x600 pixels
+  createCanvas(200,200); //creates canvas, dimensions: 1000x600 pixels
   noFill();                //disables filling geometry
 
   //Gets audio from fx. computer's microphone
