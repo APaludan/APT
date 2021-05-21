@@ -60,7 +60,7 @@ document.getElementById("startpause").addEventListener("click", () => {
   //if not recording start by comparing spec[0]
   if (!recording) {
     let x = 0, current = 0;
-    let seperator = false;
+    let separator = false;
     console.log(spec);
     while (!((compare(spec[x], 400, 480) && compare(spec[x + 1], 400, 480))) && x < spec.length) { //sort out background noise before signal has started
       //while the frequency we are looking at, and the next frequency aren't just noise, skip and continue
@@ -70,23 +70,23 @@ document.getElementById("startpause").addEventListener("click", () => {
     while (x < spec.length) { 
       while (!isValidFreq(spec[x]) && x < spec.length && !compare(spec[x], 400, 480)) {
         x++;
-        if (!isValidFreq(spec[x]) && x < spec.length && !compare(spec[x], 400, 480)) {
-          //x = spec.length; //if x and x+1 is not valid, skip all.
+        if (!isValidFreq(spec[x]) && !isValidFreq(spec[x+1]) && x < spec.length && !compare(spec[x], 400, 480)) {
+          x = spec.length; //if x and x+1 are not valid, skip all.
         } //hvad sker der her, hvorfor er der både while og if haha
       }
       while (compare(spec[x], 400, 480) && x < spec.length) { 
-        seperator = true; //while spec[x] is between 400 and 480 then it is a seperatortone
+        separator = true; //while spec[x] is between 400 and 480 then it is a separatortone
         x++;
         //console.log(x);
       }
-      while (!seperator && compare(spec[x], current - 40, current + 40) && x < spec.length) {
+      while (!separator && compare(spec[x], current - 40, current + 40) && x < spec.length) {
         //If the tone is not the seperation tone, and the frequency is the same as the prev, just skip
         x++;
       }
 
       current = spec[x];
-      if (isValidFreq(spec[x]) && seperator) { //if the freq is valid an the seperator tone has been there
-        seperator = false;
+      if (isValidFreq(spec[x]) && separator) { //if the freq is valid an the separator tone has been there
+        separator = false;
         identifiedFreqs.push(isValidFreq(spec[x])); //push to identified freqs
         bitstring += freqToBits(identifiedFreqs[identifiedFreqs.length - 1]);
         //console.log("x: " + x + "freq: " + identifiedFreqs[identifiedFreqs.length-1]);
@@ -126,7 +126,7 @@ function setup() {
   mic.start();
 
   //FFT (fast fourier transform) isolates individual audio frequencies within a waveform 
-  fft = new p5.FFT(0.0);
+  fft = new p5.FFT(0.0, 2048);
   fft.setInput(mic); //Sets the input source for the FFT analysis
 }
 
@@ -157,7 +157,7 @@ function draw() {
   //so to find this value u take the sample rate and divide it with 2 to get the frequencies humans can hear. 
   //Then we divide it with the number of bins to get the frequencies in the loudestBin.
  
-  if (recording == true) {
+  if (recording == true && (isValidFreq(loudestFreq) || compare(loudestFreq, 400, 480))) {
     spec[j] = loudestFreq;
     j++;
   }
