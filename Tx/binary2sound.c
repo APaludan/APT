@@ -18,7 +18,7 @@ int calcSamples(int16_t **samples, long int bitDuration, long int N, long int bi
 
 int main(int argc, char *argv[])
 {
-	char *imageBitArray, c;
+	//char *imageBitArray, c; disse variabler bliver ikke brugt, så tænker, de skal væk (c bliver brugt senere, men bliver også initialiseret senere)
 	int modulationScheme = 0; //0 = 8fsk, 1 = bfsk
  
 	//Checks the different input arguments
