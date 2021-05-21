@@ -3,7 +3,7 @@
 #include <stdint.h>
 #include <math.h>
 #include <string.h>
-#include <windows.h>
+//#include <windows.h>
 #include <time.h>
 
 //Modulation functions
@@ -51,8 +51,8 @@ int _8fsk()
 {
   char *binaryBytes, c;
   int index = 0;
-      //bitDuration is calculated by dividing the sample rate of the system with the framerate. eg: 44100 / 144 = 306.25 (INT 306) and multiplied by scalar (# of frames for each tone)
-  long int bitDuration = 306*30; // duration of each bit (samples per bit)
+      //bitDuration is calculated by dividing the sample rate of the system with the framerate. eg: 44000 / 144 = 306.25 (INT 306) and multiplied by scalar (# of frames for each tone)
+  long int bitDuration = (long int)100; // duration of each bit (samples per bit)
 
   FILE *binaryFilePtr = fopen("../tempFiles/tempBinary.txt", "r");
   //  FILE *binaryFilePtr = fopen("../tempFiles/img.txt", "r"); //short binary file for test
@@ -195,13 +195,14 @@ int calcSamples(int16_t **samples, long int bitDuration, long int N, long int bi
 
     for (int j = 0; j < bitDuration; j++) //j er tid ud af x-aksen
     {
-        samples[i][j] = amp * sin(j * (freq * i) * p2f_s); 
+        //samples[i][j] = amp * sin(j * (freq * i) * p2f_s); 
+        samples[i][j] = amp * sin(j * (freq * i) * p2f_s - M_PI/2); 
         //vi får en y værdi som svarer til amplituden af kurven til tiden j
     }
   }
 
     //  prints the initial binary file length, duration of audio file and bit rate
-    printf("Input len: %d\n", binaryFileLen);
+    printf("Input len: %ld\n", binaryFileLen);
     printf("N: %ld\n", N);
     printf("Seconds: %d\n", seconds);
     printf("bps: %d\n", bps);
@@ -212,7 +213,7 @@ int calcSamples(int16_t **samples, long int bitDuration, long int N, long int bi
 void makeAudio(int16_t *buffer, long int N)
 {
   // Pipe the audio data to ffmpeg, which writes it to an audio file (wav/flac..)
-  FILE *audioPtr = popen("ffmpeg.exe -hide_banner -loglevel error -y -f s16le -acodec pcm_s16le -vn -ar 44000 -ac 1 -i - ../tempFiles/imageAudio.wav", "w");
+  FILE *audioPtr = popen("./ffmpeg -hide_banner -loglevel error -y -f s16le -acodec pcm_s16le -vn -ar 44000 -ac 1 -i - ../tempFiles/imageAudio.wav", "w");
     fwrite(buffer, 2, N, audioPtr);
     pclose(audioPtr);
   
