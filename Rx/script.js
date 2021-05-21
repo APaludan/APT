@@ -77,7 +77,7 @@ document.getElementById("startpause").addEventListener("click", () => {
       while (compare(spec[x], 400, 480) && x < spec.length) { 
         seperator = true; //while spec[x] is between 400 and 480 then it is a seperatortone
         x++;
-        console.log(x);
+        //console.log(x);
       }
       while (!seperator && compare(spec[x], current - 40, current + 40) && x < spec.length) {
         //If the tone is not the seperation tone, and the frequency is the same as the prev, just skip
@@ -89,7 +89,7 @@ document.getElementById("startpause").addEventListener("click", () => {
         seperator = false;
         identifiedFreqs.push(isValidFreq(spec[x])); //push to identified freqs
         bitstring += freqToBits(identifiedFreqs[identifiedFreqs.length - 1]);
-        console.log("x: " + x + "freq: " + identifiedFreqs[identifiedFreqs.length-1]);
+        //console.log("x: " + x + "freq: " + identifiedFreqs[identifiedFreqs.length-1]);
         while (!compare(spec[x], 400, 480) && x < spec.length) { //hvad sker der her
           x++;
         }
