@@ -215,6 +215,16 @@ void makeAudio(int16_t *buffer, long int N)
   FILE *audioPtr = popen("ffmpeg.exe -hide_banner -loglevel error -y -f s16le -acodec pcm_s16le -vn -ar 44000 -ac 1 -i - ../tempFiles/imageAudio.wav", "w");
     fwrite(buffer, 2, N, audioPtr);
     pclose(audioPtr);
+  
+  printf("Add values to csv file\n");
+  FILE *csvfile;
+  //csvfile = fopen("../io_files/samples.csv", "w");
+  csvfile = fopen("samples.csv", "w");
+  for (int i = 0 ; i < N ; ++i){
+    fprintf(csvfile, "%d\n", buffer[i]);
+  } 
+  fclose(csvfile);
+  
 }
  
 /*int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int binaryFileLen, int bitDuration, int N)
