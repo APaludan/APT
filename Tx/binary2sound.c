@@ -216,15 +216,15 @@ void makeAudio(int16_t *buffer, long int N)
     fwrite(buffer, 2, N, audioPtr);
     pclose(audioPtr);
   
-  printf("Add values to csv file\n");
+  printf("Adding values to csv file...\n");
   FILE *csvfile;
   //csvfile = fopen("../io_files/samples.csv", "w");
-  csvfile = fopen("samples.csv", "w");
+  csvfile = fopen("buffer.csv", "w");
   for (int i = 0 ; i < N ; ++i){
     fprintf(csvfile, "%d\n", buffer[i]);
   } 
   fclose(csvfile);
-  
+  printf(".csv file saved.\n");
 }
  
 /*int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int binaryFileLen, int bitDuration, int N)
@@ -430,4 +430,3 @@ int _bfsk(){
   fclose(binary_file_ptr);
 }
 */
-
