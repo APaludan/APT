@@ -60,7 +60,7 @@ document.getElementById("startpause").addEventListener("click", () => {
   //if not recording start by comparing spec[0]
   if (!recording) {
     let x = 0, current = 0;
-    let seperator = false;
+    let separator = false;
     console.log(spec);
     while (!((compare(spec[x], 400, 480) && compare(spec[x + 1], 400, 480))) && x < spec.length) { //sort out background noise before signal has started
       //while the frequency we are looking at, and the next frequency aren't just noise, skip and continue
@@ -75,18 +75,18 @@ document.getElementById("startpause").addEventListener("click", () => {
         } //hvad sker der her, hvorfor er der både while og if haha
       }
       while (compare(spec[x], 400, 480) && x < spec.length) { 
-        seperator = true; //while spec[x] is between 400 and 480 then it is a seperatortone
+        separator = true; //while spec[x] is between 400 and 480 then it is a separatortone
         x++;
         //console.log(x);
       }
-      while (!seperator && compare(spec[x], current - 40, current + 40) && x < spec.length) {
+      while (!separator && compare(spec[x], current - 40, current + 40) && x < spec.length) {
         //If the tone is not the seperation tone, and the frequency is the same as the prev, just skip
         x++;
       }
 
       current = spec[x];
-      if (isValidFreq(spec[x]) && seperator) { //if the freq is valid an the seperator tone has been there
-        seperator = false;
+      if (isValidFreq(spec[x]) && separator) { //if the freq is valid an the separator tone has been there
+        separator = false;
         identifiedFreqs.push(isValidFreq(spec[x])); //push to identified freqs
         bitstring += freqToBits(identifiedFreqs[identifiedFreqs.length - 1]);
         //console.log("x: " + x + "freq: " + identifiedFreqs[identifiedFreqs.length-1]);
