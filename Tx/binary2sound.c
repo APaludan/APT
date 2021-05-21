@@ -195,7 +195,7 @@ int calcSamples(int16_t **samples, long int bitDuration, long int N, long int bi
 
     for (int j = 0; j < bitDuration; j++) //j er tid ud af x-aksen
     {
-        samples[i][j] = amp * sin(j * (freq * i) * p2f_s - M_PI/2); //(- M_PI/4 -> phaseshifting)
+        samples[i][j] = amp * sin(j * (freq * i) * p2f_s - M_PI/2); //(- M_PI/2 -> phaseshifting)
         //vi får en y værdi som svarer til amplituden af kurven til tiden j
     }
   }
