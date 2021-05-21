@@ -14,11 +14,7 @@ const bitCombinations = [ "000", "001", "010", "100", "011", "101", "110", "111"
 //This function compares the x to the min and the max value
 //it returns true if x i within the limit, else false
 function compare(x, min, max) { 
-  if (x > min && x < max) {
-    return true;
-  }
-  else
-    return false;
+  return x > min && x < max;
 }
 
 //This function checks whether the detected sound has a valid frequency
@@ -51,7 +47,15 @@ document.getElementById("startpause").addEventListener("click", () => {
   recording = !recording;
   console.log("recording: " + recording); //console.log is recording true or false
   console.log(spec); //console.log the spec array
+  record();
+});
 
+function record(){
+  if (recording = false)
+    recording = !recording;
+  console.log("recording: " + recording); //console.log is recording true or false
+  console.log(spec); //console.log the spec array
+  
   //empty array and string for holding the collected freqs and converting to bits
   let identifiedFreqs = [];
   let bitstring = '';
@@ -98,8 +102,9 @@ document.getElementById("startpause").addEventListener("click", () => {
     console.log(identifiedFreqs);
     console.log("bitstring: " + bitstring);
     showImage(bitstring);
-  }
-});
+}
+
+
 //when reset button clicked, the spec.length and j will be set to 0
 document.getElementById("reset").addEventListener("click", () => {
   spec.length = 0;
