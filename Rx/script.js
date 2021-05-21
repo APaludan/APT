@@ -105,6 +105,7 @@ document.getElementById("reset").addEventListener("click", () => {
   spec.length = 0;
   j = 0;
   x = 0;
+  recording = false;
   console.log("reset!");
 });
 
