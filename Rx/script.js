@@ -56,28 +56,34 @@ document.getElementById("startpause").addEventListener("click", () => {
   //if not recording start by comparing spec[0]
   if (!recording) {
     let x = 0, current = 0;
-    let separator = false;
+    let separator = false; //this boolean controls whether there has been a separator tone yet
     console.log(spec);
-    while (!((compare(spec[x], 440) && compare(spec[x + 1], 440))) && x < spec.length) { //sort out background noise before signal has started
-      //while the frequency we are looking at, and the next frequency aren't just noise, skip and continue
+
+    //step 1: skip all tones registered before the first time multiple separator tones have been registered:
+    while (!((compare(spec[x], 440) && compare(spec[x + 1], 440))) && x < spec.length) { 
       x++;
     }
-    console.log("x: ", x);
+
+    //step 2: identify information carrying frequencies in the "spec" array:
     while (x < spec.length) { 
+      //identify consecutive separator tones:
       while (compare(spec[x], 440) && x < spec.length) { 
         if (compare(spec[x+1], 440))
-          separator = true; //while spec[x] is between 400 and 480 then it is a separatortone
+          separator = true; //if two separator tones are identified in a row, separator boolean is set to true
         x++;
       }
-      if (!separator)
+
+      if (!separator) //if we reach this point, and separator is false, we skip the frequency
         x++;
 
       current = spec[x];
+
+      // if the current frequency is valid and there has been a separator tone, we add the frequency to 
+      // the array of identified (info carrying) frequencies. Then we skip all the frequencies similar to this freq:
       if (isValidFreq(spec[x]) && separator) { //if the freq is valid an the separator tone has been there
         separator = false;
         identifiedFreqs.push(isValidFreq(spec[x])); //push to identified freqs
         bitstring += freqToBits(identifiedFreqs[identifiedFreqs.length - 1]);
-        //console.log("x: " + x + "freq: " + identifiedFreqs[identifiedFreqs.length-1]);
         while (!compare(spec[x], 440) && x < spec.length) { //spring til næste separator
           x++;
         }
