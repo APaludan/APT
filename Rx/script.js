@@ -126,7 +126,7 @@ function setup() {
   mic.start();
 
   //FFT (fast fourier transform) isolates individual audio frequencies within a waveform 
-  fft = new p5.FFT(0.0);
+  fft = new p5.FFT(0.0, 2048);
   fft.setInput(mic); //Sets the input source for the FFT analysis
 }
 
