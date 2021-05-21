@@ -80,7 +80,7 @@ document.getElementById("startpause").addEventListener("click", () => {
         console.log(x);
       }
       while (!seperator && compare(spec[x], current - 40, current + 40) && x < spec.length) {
-        //hvad sker der her
+        //If the tone is not the seperation tone, and the frequency is the same as the prev, just skip
         x++;
       }
 
