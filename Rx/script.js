@@ -159,6 +159,7 @@ function draw() {
   //Then we divide it with the number of bins to get the frequencies in the loudestBin.
  
   if (recording == true && (isValidFreq(loudestFreq) || compare(loudestFreq, 400, 480))) {
+    //if recording is true and the freq is either valid or a separation tone then add to spec[j]
     spec[j] = loudestFreq;
     j++;
   }
