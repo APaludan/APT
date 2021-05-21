@@ -64,21 +64,13 @@ document.getElementById("startpause").addEventListener("click", () => {
     }
     console.log("x: ", x);
     while (x < spec.length) { 
-      while (!isValidFreq(spec[x]) && x < spec.length && !compare(spec[x], 440)) {
-        x++;
-        if (!isValidFreq(spec[x]) && !isValidFreq(spec[x+1]) && x < spec.length && !compare(spec[x], 440)) {
-          x = spec.length; //if x and x+1 are not valid, skip all.
-        } //hvad sker der her, hvorfor er der både while og if haha
-      }
       while (compare(spec[x], 440) && x < spec.length) { 
-        separator = true; //while spec[x] is between 400 and 480 then it is a separatortone
-        x++;
-        //console.log(x);
-      }
-      while (!separator && compare(spec[x], current) && x < spec.length) {
-        //If the tone is not the seperation tone, and the frequency is the same as the prev, just skip
+        if (compare(spec[x+1], 440))
+          separator = true; //while spec[x] is between 400 and 480 then it is a separatortone
         x++;
       }
+      if (!separator)
+        x++;
 
       current = spec[x];
       if (isValidFreq(spec[x]) && separator) { //if the freq is valid an the separator tone has been there
@@ -86,7 +78,7 @@ document.getElementById("startpause").addEventListener("click", () => {
         identifiedFreqs.push(isValidFreq(spec[x])); //push to identified freqs
         bitstring += freqToBits(identifiedFreqs[identifiedFreqs.length - 1]);
         //console.log("x: " + x + "freq: " + identifiedFreqs[identifiedFreqs.length-1]);
-        while (!compare(spec[x], 440) && x < spec.length) { //hvad sker der her
+        while (!compare(spec[x], 440) && x < spec.length) { //spring til næste separator
           x++;
         }
       }
