@@ -13,12 +13,8 @@ const bitCombinations = [ "000", "001", "010", "100", "011", "101", "110", "111"
 
 //This function compares the x to the min and the max value
 //it returns true if x i within the limit, else false
-function compare(x, min, max) { 
-  if (x > min && x < max) {
-    return true;
-  }
-  else
-    return false;
+function compare(x, target) { 
+  return x > target - 40 && x < target + 40;
 }
 
 //This function checks whether the detected sound has a valid frequency
@@ -26,7 +22,7 @@ function compare(x, min, max) {
 //Returns false or the valid frequency
 function isValidFreq(freq) {
   for (let i = 0; i < validFreqs.length; i++) {
-    if (compare(freq, validFreqs[i] - 40, validFreqs[i] + 40)) {
+    if (compare(freq, validFreqs[i])) {
       return validFreqs[i];
     }
   }
@@ -62,24 +58,24 @@ document.getElementById("startpause").addEventListener("click", () => {
     let x = 0, current = 0;
     let separator = false;
     console.log(spec);
-    while (!((compare(spec[x], 400, 480) && compare(spec[x + 1], 400, 480))) && x < spec.length) { //sort out background noise before signal has started
+    while (!((compare(spec[x], 440) && compare(spec[x + 1], 440))) && x < spec.length) { //sort out background noise before signal has started
       //while the frequency we are looking at, and the next frequency aren't just noise, skip and continue
       x++;
     }
     console.log("x: ", x);
     while (x < spec.length) { 
-      while (!isValidFreq(spec[x]) && x < spec.length && !compare(spec[x], 400, 480)) {
+      while (!isValidFreq(spec[x]) && x < spec.length && !compare(spec[x], 440)) {
         x++;
-        if (!isValidFreq(spec[x]) && !isValidFreq(spec[x+1]) && x < spec.length && !compare(spec[x], 400, 480)) {
+        if (!isValidFreq(spec[x]) && !isValidFreq(spec[x+1]) && x < spec.length && !compare(spec[x], 440)) {
           x = spec.length; //if x and x+1 are not valid, skip all.
         } //hvad sker der her, hvorfor er der både while og if haha
       }
-      while (compare(spec[x], 400, 480) && x < spec.length) { 
+      while (compare(spec[x], 440) && x < spec.length) { 
         separator = true; //while spec[x] is between 400 and 480 then it is a separatortone
         x++;
         //console.log(x);
       }
-      while (!separator && compare(spec[x], current - 40, current + 40) && x < spec.length) {
+      while (!separator && compare(spec[x], current) && x < spec.length) {
         //If the tone is not the seperation tone, and the frequency is the same as the prev, just skip
         x++;
       }
@@ -90,7 +86,7 @@ document.getElementById("startpause").addEventListener("click", () => {
         identifiedFreqs.push(isValidFreq(spec[x])); //push to identified freqs
         bitstring += freqToBits(identifiedFreqs[identifiedFreqs.length - 1]);
         //console.log("x: " + x + "freq: " + identifiedFreqs[identifiedFreqs.length-1]);
-        while (!compare(spec[x], 400, 480) && x < spec.length) { //hvad sker der her
+        while (!compare(spec[x], 440) && x < spec.length) { //hvad sker der her
           x++;
         }
       }
@@ -158,7 +154,7 @@ function draw() {
   //so to find this value u take the sample rate and divide it with 2 to get the frequencies humans can hear. 
   //Then we divide it with the number of bins to get the frequencies in the loudestBin.
  
-  if (recording == true && (isValidFreq(loudestFreq) || compare(loudestFreq, 400, 480))) {
+  if (recording == true && (isValidFreq(loudestFreq) || compare(loudestFreq, 440))) {
     //if recording is true and the freq is either valid or a separation tone then add to spec[j]
     spec[j] = loudestFreq;
     j++;
@@ -236,7 +232,7 @@ function binaryToString(str) {
   //spec[] is now filled up with loudest freqs 
   //if not recording start by comparing spec[0] 
   if (!recording) {
-    while (!compare(spec[0], 400, 480)) { //sort out background noise before signal has started
+    while (!compare(spec[0], 440)) { //sort out background noise before signal has started
       spec.shift();
       if (!(compare(spec[1],400,480) && compare(spec[2],400,480))) //if not the two following are separator tone:
         spec[1] = 0; //spec[1] will be set to 0, to avoid a false registration of separator tone if noise is equal to separator tone
