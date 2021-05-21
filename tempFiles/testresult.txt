@@ -1,0 +1,28 @@
+Sound: 000001010100011101110111000001010100011101110111
+validFreqs : 880, 1320, 1760, 2200, 2640, 3080, 3520, 3960
+
+results:
+000001010100011101110111000001010100011101110111
+
+0: 880
+1: 1320
+2: 1760
+3: 2200
+4: 2640
+5: 3080
+6: 3520
+7: 3960
+8: 880
+9: 1320
+10: 1760
+11: 2200
+12: 2640
+13: 3080
+14: 3520
+15: 3960
+
+
+It does not work if the string is under 7 bits. 
+
+in test2blue we can see that we get the same string before and after trasnmission into soundwaves.
+
