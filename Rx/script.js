@@ -59,7 +59,7 @@ document.getElementById("startpause").addEventListener("click", () => {
     let separator = false; //this boolean controls whether there has been a separator tone yet
     console.log(spec);
 
-    //step 1: skip all tones registered before the first time multiple separator tones have been registered:
+    //step 1: skip all tones registered before the first separator tones have been registered multiple times:
     while (!((compare(spec[x], 440) && compare(spec[x + 1], 440))) && x < spec.length) { 
       x++;
     }
