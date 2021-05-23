@@ -59,9 +59,8 @@ document.getElementById("startpause").addEventListener("click", () => {
 	//if not recording start by comparing spec[0]
 	if (!recording) {
 		let x = 0,
-			current = 0;
-		let separator = false; //this boolean controls whether there has been a separator tone yet
-		console.log(spec);
+			current = 0,
+			separator = false; //this boolean controls whether there has been a separator tone yet
 
 		//step 1: skip all tones registered before the first separator tones have been registered multiple times:
 		while (!((compare(spec[x], sepFreq) && compare(spec[x + 1], sepFreq))) && x < spec.length) {
@@ -77,7 +76,7 @@ document.getElementById("startpause").addEventListener("click", () => {
 				x++;
 			}
 
-			if (!separator) //if we reach this point, and separator is false, we skip the frequency
+			if (!separator && x < spec.length) //if we reach this point, and separator is false, we skip the frequency
 				x++;
 
 			current = spec[x];
