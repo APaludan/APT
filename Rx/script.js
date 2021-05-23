@@ -1,5 +1,5 @@
 //Global variables ooops 
-let mic, fft, spec = [],
+let mic = false, spec = [],
 	j = 0,
 	recording = false;
 const sepFreq = 440;
@@ -47,6 +47,10 @@ function freqToBits(freq) {
 //Record/stop -> identify the different frequencies 
 
 document.getElementById("startpause").addEventListener("click", () => {
+	if (!mic) {
+		getMedia();
+		mic = true;
+	}
 	recording = !recording;
 	console.log("recording: " + recording); //console.log is recording true or false
 	console.log(spec); //console.log the spec array
@@ -58,6 +62,7 @@ document.getElementById("startpause").addEventListener("click", () => {
 	//spec[] is now filled up with loudest freqs 
 	//if not recording start by comparing spec[0]
 	if (!recording) {
+		document.getElementById("spinspin").style.display = "none";
 		let x = 0,
 			current = 0,
 			separator = false; //this boolean controls whether there has been a separator tone yet
@@ -96,6 +101,8 @@ document.getElementById("startpause").addEventListener("click", () => {
 		console.log("bitstring: " + bitstring);
 		showImage(bitstring);
 	}
+	else
+		document.getElementById("spinspin").style.display = "inline-block";
 });
 //when reset button clicked, the spec.length and j will be set to 0
 document.getElementById("reset").addEventListener("click", () => {
@@ -106,7 +113,7 @@ document.getElementById("reset").addEventListener("click", () => {
 	console.log("reset!");
 });
 
-document.getElementById("run").addEventListener("click", () => {
+function getMedia() {
 	navigator.mediaDevices.getUserMedia({ audio: true })
 	.then(function (stream) {
 		let audioContext = new AudioContext({ sampleRate: 384000 });
@@ -132,6 +139,7 @@ document.getElementById("run").addEventListener("click", () => {
 			}
 			let frequency = loudestBin * (audioContext.sampleRate / analyser.fftSize);
 			
+			document.getElementById("spectogram").style.width = `${loudestBin/500*50}vw`;
 			//if recording is true and the freq is either valid or a separation tone then push to spec
 			if (recording && (isValidFreq(frequency) || compare(frequency, sepFreq))) {
 				spec.push(frequency);
@@ -139,9 +147,9 @@ document.getElementById("run").addEventListener("click", () => {
 		};
 		scriptProcessor.addEventListener('audioprocess', onAudio);
 	}).catch (error => {
-		console.error(error, "Check if your browser allows access to a microphone");
+		console.error(error.message, "- check if your browser allows access to a microphone");
 	});
-});
+}
 
 
 //------------
