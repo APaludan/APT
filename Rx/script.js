@@ -53,15 +53,15 @@ document.getElementById("startpause").addEventListener("click", () => {
 	}
 	recording = !recording;
 	console.log("recording: " + recording); //console.log is recording true or false
-	console.log(spec); //console.log the spec array
-
+	
 	//empty array and string for holding the collected freqs and converting to bits
 	let identifiedFreqs = [];
 	let bitstring = '';
-
+	
 	//spec[] is now filled up with loudest freqs 
 	//if not recording start by comparing spec[0]
 	if (!recording) {
+		console.log(spec); //console.log the spec array
 		document.getElementById("spinspin").style.display = "none";
 		let x = 0,
 			current = 0,
