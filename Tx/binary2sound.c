@@ -7,7 +7,7 @@
 #include <time.h>
 
 //Modulation functions
-int _8fsk();
+int mfsk();
 int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int bitDuration, long int binaryFileLen, long int N);
 void addSeparatorTone(int16_t *buffer, long int *n, long int bitDuration, int16_t **samples);
 void addBitstringTone(int16_t *buffer, long int *n, long int bitDuration, char *binaryBytes, long int j, int16_t **samples, long int binaryFileLen);
@@ -19,13 +19,13 @@ int calcSamples(int16_t **samples, long int bitDuration, long int N, long int bi
 int main(int argc, char *argv[])
 {
 	//char *imageBitArray, c; disse variabler bliver ikke brugt, så tænker, de skal væk (c bliver brugt senere, men bliver også initialiseret senere)
-	int modulationScheme = 0; //0 = 8fsk, 1 = bfsk
+	int modulationScheme = 0; //0 = mfsk, 1 = bfsk
  
 	//Checks the different input arguments
 	//Argument example  -modulationScheme bfsk
 	if(strcmp(argv[1], "-modulationScheme") == 0)
   {
-    if(strcmp(argv[2], "8fsk") == 0)
+    if(strcmp(argv[2], "mfsk") == 0)
     {
       modulationScheme = 0;
     }	
@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
 
 	if(modulationScheme == 0)
   {
-		_8fsk();
+		mfsk();
 	}
 	else if (modulationScheme == 1)
 	{
@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
   return 0;
 }
 
-int _8fsk()
+int mfsk()
 {
   char *binaryBytes, c;
   int index = 0;
@@ -114,7 +114,7 @@ int _8fsk()
   printf("Transmission finished\n");
   */
 
-  printf("8fsk is done creating the audio sample\n");
+  printf("Mfsk is done creating the audio sample\n");
   return 0;
 }
 
