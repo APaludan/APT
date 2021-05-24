@@ -8,7 +8,7 @@
 
 //Modulation functions
 int _8fsk();
-int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int bitDuration, long int binaryFileLen, int N);
+int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int bitDuration, long int binaryFileLen, long int N);
 void addSeparatorTone(int16_t *buffer, long int *n, long int bitDuration, int16_t **samples);
 void addBitstringTone(int16_t *buffer, long int *n, long int bitDuration, char *binaryBytes, long int j, int16_t **samples, long int binaryFileLen);
 void makeAudio(int16_t *buffer, long int N);
@@ -118,7 +118,7 @@ int _8fsk()
   return 0;
 }
 
-int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int bitDuration, long int binaryFileLen, int N){
+int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int bitDuration, long int binaryFileLen, long int N){
   long int n = 0, j = 0; 
   int16_t *samples[16];
 
