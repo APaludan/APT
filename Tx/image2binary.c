@@ -125,6 +125,7 @@ these 8 different bytes will then be compared to the char value (85)
   1 << 6 0100 0000
 & 85     0101 0101
          0100 0000 this value != 0 therefore we can count it as a binary "1"
+Husk vi kigger på hver bit og skriver enten 1 eller 0.
 
 if fx. 
   1 << 5 0010 0000
