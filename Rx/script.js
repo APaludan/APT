@@ -132,9 +132,13 @@ function getMedia() {
 			void analyser.getByteFrequencyData(spectrum);
 			//console.log(spectrum);
 			let loudestBin = 0;
+      let specFrequency = 0;
 			for (let i = 0; i < analyser.frequencyBinCount; i++) {
 				if (spectrum[i] > spectrum[loudestBin]) {
-					loudestBin = i;
+          specFrequency = i * (audioContext.sampleRate / analyser.fftSize);
+          if(specFrequency >= 400 && specFrequency <= 7000){
+            loudestBin = i;
+          }
 				}
 			}
 			let frequency = loudestBin * (audioContext.sampleRate / analyser.fftSize);
