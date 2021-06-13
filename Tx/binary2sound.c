@@ -187,9 +187,10 @@ int identifyBitCombination(char *bits){
         else
             res = right(res); //hvis karakter nr. i er et 1, går man videre med funktionen right
     }
-    return res - pow(2,NUMBER_OF_BITS); //returnerer indices fra 0 til 2^N-1
+    return res - pow(2,NUMBER_OF_BITS); //returnerer indices fra 0 til 2^(NUMBER_OF_BITS)-1
     //det nederste lag i tree'et har pladserne [2^NUMBER_OF_BITS;2^(NUMBER_OF_BITS+1)-1].
-    //Jeg trækker 2^NUMBER_OF_BITS fra, fordi vi så får et indeks i returneret som er 0, hvis bitstrengen
+    //Jeg trækker 2^NUMBER_OF_BITS fra, fordi vi så får et indeks returneret som er 0, hvis bitstrengen kun 
+    //indeholder 0'er, og ellers er det større end 0, men mindre end 2^NUMBER_OF_BITS
 }
 
 int left(int i){
