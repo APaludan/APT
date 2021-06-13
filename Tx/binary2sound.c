@@ -121,7 +121,7 @@ int _mfsk()
   printf("Transmission finished\n");
   */
 
-  printf("mfsk is done creating the audio sample\n");
+  printf("Mfsk is done creating the audio sample\n");
   return 0;
 }
 
