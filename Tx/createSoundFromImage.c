@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
 	system("image2binary.exe ../tempFiles/blueshit.bmp ../tempFiles/tempBinary.txt");
 	
 	//Converts binary text file to sound
-	system("binary2sound.exe -modulationScheme 8fsk");
+	system("binary2sound.exe -modulationScheme mfsk");
 
   return 0;
 }
