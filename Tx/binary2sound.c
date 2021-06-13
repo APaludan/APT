@@ -77,7 +77,7 @@ int _mfsk()
   - We want a tone between every "bit tone" therefore 2*
   */
 
-  int16_t *buffer = malloc((3 * (N + 1) + 55) * sizeof(int16_t)); //buffer array
+  int16_t *buffer = malloc((3 * (N + 1) + 50) * sizeof(int16_t)); //buffer array
   //kan vi gøre det mindre eller hvad?
   if (buffer == NULL)
   {
@@ -130,7 +130,7 @@ void addSeparatorTone(int16_t *buffer, long int *n, long int bitDuration, int16_
   int i;
 
   if (isFirst){ //hvis det er den første tone lægges der en kvart bølge ind i bufferen først, for at amplituden starter i 0
-    for (i = 75; i < 100; i++, *n++){
+    for (i = 75; i < 100; i++, (*n)++){
       buffer[*n] = samples[1][i % bitDuration];
     }
   }
@@ -168,7 +168,7 @@ void addEndTone(int16_t *buffer, long int *n, long int bitDuration, int16_t **sa
 //så den slutter med amplitude = 0
   int i;
 
-  for (i = 0; i < 25; i++, *n++){
+  for (i = 0; i < 25; i++, (*n)++){
     buffer[*n] = samples[1][i % bitDuration]; //by doing n % bitDuration will always zero the value so
                                                     //even if n is higher than the array size
                                                     //it will never make an error.
