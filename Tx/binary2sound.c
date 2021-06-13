@@ -24,33 +24,11 @@ int left(int i);
 
 //int _bfsk();
 
-int main(int argc, char *argv[])
-{
+int main(void){
 	//char *imageBitArray, c; disse variabler bliver ikke brugt, så tænker, de skal væk (c bliver brugt senere, men bliver også initialiseret senere)
 	int modulationScheme = 0; //0 = mfsk, 1 = bfsk
  
-	//Checks the different input arguments
-	//Argument example  -modulationScheme bfsk
-	if(strcmp(argv[1], "-modulationScheme") == 0)
-  {
-    if(strcmp(argv[2], "mfsk") == 0)
-    {
-      modulationScheme = 0;
-    }	
-    else
-    {
-      modulationScheme = 1;
-    }
-  }
-
-	if(modulationScheme == 0)
-  {
-		_mfsk();
-	}
-	else if (modulationScheme == 1)
-	{
-		//_bfsk();
-	}
+	_mfsk();
 	
   return 0;
 }
