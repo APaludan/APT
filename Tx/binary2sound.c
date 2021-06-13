@@ -14,6 +14,7 @@
 int _mfsk();
 int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int bitDuration, long int binaryFileLen, int N);
 void addSeparatorTone(int16_t *buffer, long int *n, long int bitDuration, int16_t **samples, int isFirst);
+void addEndTone(int16_t *buffer, long int *n, long int bitDuration, int16_t **samples);
 void addBitstringTone(int16_t *buffer, long int *n, long int bitDuration, char *binaryBytes, long int j, int16_t **samples, long int binaryFileLen);
 void makeAudio(int16_t *buffer, long int N);
 int calcSamples(int16_t **samples, long int bitDuration, long int N, long int binaryFileLen);
@@ -141,6 +142,8 @@ int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int bitDuration, lo
     addSeparatorTone(buffer, &n, bitDuration, samples, 0);
     j += 3;
   }
+  addEndTone(buffer, &n, bitDuration, samples);
+
   return 0;
 }
 
@@ -148,7 +151,7 @@ void addSeparatorTone(int16_t *buffer, long int *n, long int bitDuration, int16_
   long int e; //is used in the for loop as the upper bound for n, as the number of samples for each bit sequence/separation tone should be equal to the bitDuration measured in samples
   int i;
 
-  if (isFirst){ //hvis det er den første tone lægges der en kvart bølge til, for at amplituden starter i 0
+  if (isFirst){ //hvis det er den første tone lægges der en kvart bølge ind i bufferen først, for at amplituden starter i 0
     for (i = 75; i < 100; i++, *n++){
       buffer[*n] = samples[1][i % bitDuration];
     }
@@ -181,6 +184,19 @@ void addBitstringTone(int16_t *buffer, long int *n, long int bitDuration, char *
     for (*n; *n < e; (*n)++){
         buffer[*n] = samples[i+2][(*n) % bitDuration]; //samples[1] is the separation tone, meaning that the tones representing bit seqs have indices 2 through 15
     }
+}
+
+void addEndTone(int16_t *buffer, long int *n, long int bitDuration, int16_t **samples){ //skriver den sidste del af den sidste separator-tone (440 Hz) ind i buffer
+//så den slutter med amplitude = 0
+  int i;
+
+  for (i = 0; i < 25; i++, *n++){
+    buffer[*n] = samples[1][i % bitDuration]; //by doing n % bitDuration will always zero the value so
+                                                    //even if n is higher than the array size
+                                                    //it will never make an error.
+                                                    //fx. n = 10000   -> 10000 % 10000 = 0 -> 19999 % 10000 = 9999
+                                                    //fx. n = 30000   -> 30000 % 10000 = 0 -> 39999 % 10000 = 9999     
+  }
 }
 
 int identifyBitCombination(char *bits){
