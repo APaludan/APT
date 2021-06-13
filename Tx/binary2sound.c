@@ -7,7 +7,7 @@
 #include <time.h>
 
 
-#define NUMBER_OF_BITS 4
+#define NUMBER_OF_BITS 3
 
 
 //Modulation functions
