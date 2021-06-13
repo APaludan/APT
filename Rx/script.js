@@ -130,7 +130,7 @@ function getMedia() {
 		analyser.connect(scriptProcessor);
 		scriptProcessor.connect(audioContext.destination);
 
-		function onAudio() {
+		function onAudio() { 
 			let spectrum = new Uint8Array(analyser.frequencyBinCount);
 			void analyser.getByteFrequencyData(spectrum);
 			//console.log(spectrum);
