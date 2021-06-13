@@ -99,7 +99,7 @@ int _mfsk()
   - We want a tone between every "bit tone" therefore 2*
   */
 
-  int16_t *buffer = malloc(3 * (N + 1) * sizeof(int16_t)); //buffer array
+  int16_t *buffer = malloc((3 * (N + 1) + 50) * sizeof(int16_t)); //buffer array
   //kan vi gøre det mindre eller hvad?
   if (buffer == NULL)
   {
