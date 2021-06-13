@@ -106,7 +106,7 @@ int _mfsk()
 
 int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int bitDuration, long int binaryFileLen, int N){
   long int n = 0, j = 0; 
-  int16_t *samples[16];
+  int16_t *samples[17];
 
   if (calcSamples(samples, bitDuration, N, binaryFileLen)) //calculates matrix of samples
   {
@@ -118,7 +118,7 @@ int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int bitDuration, lo
   while (j < binaryFileLen){ //writes tones to the buffer depending on combinations of three bits at a time. Every other tone is a separation tone (to make rx easier)
     addBitstringTone(buffer, &n, bitDuration, binaryBytes, j, samples, binaryFileLen);
     addSeparatorTone(buffer, &n, bitDuration, samples, 0);
-    j += 3;
+    j += NUMBER_OF_BITS;
   }
   addEndTone(buffer, &n, bitDuration, samples);
 
@@ -155,6 +155,8 @@ void addBitstringTone(int16_t *buffer, long int *n, long int bitDuration, char *
     for (k = 0; k < NUMBER_OF_BITS; ++k){
         if ((j + k) < binaryFileLen)  //tilføjet 17/5, ikke testet. Men burde forhindre out of bounds
           strncat(str, &binaryBytes[j+k], 1); //copies next 4 bits from binary img-file into a separate string
+        else
+          strncat(str, '0', 1);
     }
 
     i = identifyBitCombination(str); //bruges til at finde ud af hvilken bitstreng det er, hvilket bestemmer hvilken tone der skal tilføjes
@@ -211,7 +213,7 @@ int calcSamples(int16_t **samples, long int bitDuration, long int N, long int bi
   int bps = binaryFileLen / seconds;  //  calculation for bps
   double p2f_s = 2.0 * M_PI / f_s;
 
-  for (int i = 1; i <= 15; i++)
+  for (int i = 1; i <= pow(2,NUMBER_OF_BITS); i++) //pow(2,N) = antallet af kombinationer
   {
     samples[i] = malloc(bitDuration * sizeof(int16_t));
     if (samples[i] == NULL)
