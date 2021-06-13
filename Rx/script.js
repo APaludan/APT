@@ -123,19 +123,19 @@ function getMedia() {
 		let analyser = audioContext.createAnalyser(); 
 		let scriptProcessor = audioContext.createScriptProcessor(256, 1, 1); //the buffer
 		analyser.smoothingTimeConstant = 0.0; 
-		analyser.fftSize = 16384;
+		analyser.fftSize = 16384; //window size of fft in number of samples
 
-		input.connect(analyser);
-		analyser.connect(scriptProcessor);
-		scriptProcessor.connect(audioContext.destination);
+		input.connect(analyser); //connects input to the analyser
+		analyser.connect(scriptProcessor); //connects analyser to scriptProcessor
+		scriptProcessor.connect(audioContext.destination); //connects scriptProcessor to the mic
 
 		function onAudio() { 
-			let spectrum = new Uint8Array(analyser.frequencyBinCount);
-			void analyser.getByteFrequencyData(spectrum);
+			let spectrum = new Uint8Array(analyser.frequencyBinCount); //an integer half that of the .fftSize.
+			void analyser.getByteFrequencyData(spectrum); //copies the current frequency data into the Uint8Array (unsigned byte array) passed into it.
 			//console.log(spectrum);
 			let loudestBin = 0;
       let specFrequency = 0;
-			for (let i = 0; i < analyser.frequencyBinCount; i++) {
+			for (let i = 0; i < analyser.frequencyBinCount; i++) { 
 				if (spectrum[i] > spectrum[loudestBin]) {
           specFrequency = i * (audioContext.sampleRate / analyser.fftSize);
           if(specFrequency >= 400 && specFrequency <= 7000){
