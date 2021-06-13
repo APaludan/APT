@@ -88,9 +88,9 @@ document.getElementById("startpause").addEventListener("click", () => {
 
 			// if the current frequency is valid and there has been a separator tone, we add the frequency to 
 			// the array of identified (info carrying) frequencies. Then we skip all the frequencies similar to this freq:
-			if (isValidFreq(spec[x]) && separator) { //if the freq is valid an the separator tone has been there
+			if (isValidFreq(current) && separator) { //if the freq is valid an the separator tone has been there
 				separator = false;
-				identifiedFreqs.push(isValidFreq(spec[x])); //push to identified freqs
+				identifiedFreqs.push(isValidFreq(current)); //push to identified freqs
 				bitstring += freqToBits(identifiedFreqs[identifiedFreqs.length - 1]);
 				while (!compare(spec[x], sepFreq) && x < spec.length) { //spring til næste separator
 					x++;
