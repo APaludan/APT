@@ -61,7 +61,7 @@ document.getElementById("startpause").addEventListener("click", () => {
 	//if not recording start by comparing spec[0]
 	if (!recording) {
 		console.log(spec); //console.log the spec array
-		document.getElementById("spinspin").style.display = "none"; 
+		document.getElementById("spinspin").style.display = "none"; //if not recording dont show the spin thing
 		let x = 0,
 			current = 0,
 			separator = false; //this boolean controls whether there has been a separator tone yet
@@ -101,7 +101,7 @@ document.getElementById("startpause").addEventListener("click", () => {
 		showImage(bitstring);
 	}
 	else
-		document.getElementById("spinspin").style.display = "inline-block"; 
+		document.getElementById("spinspin").style.display = "inline-block"; //if recording the spin thing is shown
 });
 //when reset button clicked, the spec.length and j will be set to 0
 document.getElementById("reset").addEventListener("click", () => {
@@ -116,13 +116,13 @@ document.getElementById("reset").addEventListener("click", () => {
 //FORKLAR ALT DET DER GETMEDIA
 //--------------------
 function getMedia() {
-	navigator.mediaDevices.getUserMedia({ audio: true })
-	.then(function (stream) {
-		let audioContext = new AudioContext({ sampleRate: 384000 });
-		let input = audioContext.createMediaStreamSource(stream);
-		let analyser = audioContext.createAnalyser();
-		let scriptProcessor = audioContext.createScriptProcessor(256, 1, 1);
-		analyser.smoothingTimeConstant = 0.0;
+	navigator.mediaDevices.getUserMedia({ audio: true }) //get access to users audio, takes an object as parameter (audio true and/or video true)
+	.then(function (stream) { //if promise is resolved then execute line 121 to 154, stream is a result of the promise getUserMedia
+		let audioContext = new AudioContext({ sampleRate: 384000 }); //make new audio context with the given sample rate 
+		let input = audioContext.createMediaStreamSource(stream); //creates audio stream representing the mic input audio
+		let analyser = audioContext.createAnalyser(); 
+		let scriptProcessor = audioContext.createScriptProcessor(256, 1, 1); //the buffer
+		analyser.smoothingTimeConstant = 0.0; 
 		analyser.fftSize = 16384;
 
 		input.connect(analyser);
