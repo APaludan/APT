@@ -2,7 +2,7 @@
 let mic = false, spec = [],
 	j = 0,
 	recording = false;
-const sepFreq = 440;
+const sepFreq = 440; //separator tone
 const validFreqs = [880, 1320, 1760, 2200, 2640, 3080, 3520, 3960, 4400, 4840, 5280, 5720, 6160, 6600]; //skal matche de freq vi sender ved (14 toner). Separator tone behøver IKKE inkluderes
 const bitCombinations = ["000", "001", "010", "100", "011", "101", "110", "111",
 	"00", "01", "10", "11",
@@ -47,9 +47,9 @@ function freqToBits(freq) {
 //Record/stop -> identify the different frequencies 
 
 document.getElementById("startpause").addEventListener("click", () => {
-	if (!mic) {
-		getMedia();
-		mic = true;
+	if (!mic) { //if start button is clicked, and mic was false before -> set mic to true
+		getMedia(); //here spec will be filled with loudest freqs and audio is analyzed
+		mic = true; 
 	}
 	recording = !recording;
 	console.log("recording: " + recording); //console.log is recording true or false
@@ -62,7 +62,7 @@ document.getElementById("startpause").addEventListener("click", () => {
 	//if not recording start by comparing spec[0]
 	if (!recording) {
 		console.log(spec); //console.log the spec array
-		document.getElementById("spinspin").style.display = "none";
+		document.getElementById("spinspin").style.display = "none"; 
 		let x = 0,
 			current = 0,
 			separator = false; //this boolean controls whether there has been a separator tone yet
@@ -102,7 +102,7 @@ document.getElementById("startpause").addEventListener("click", () => {
 		showImage(bitstring);
 	}
 	else
-		document.getElementById("spinspin").style.display = "inline-block";
+		document.getElementById("spinspin").style.display = "inline-block"; 
 });
 //when reset button clicked, the spec.length and j will be set to 0
 document.getElementById("reset").addEventListener("click", () => {
@@ -113,6 +113,9 @@ document.getElementById("reset").addEventListener("click", () => {
 	console.log("reset!");
 });
 
+//--------------------
+//FORKLAR ALT DET DER GETMEDIA
+//--------------------
 function getMedia() {
 	navigator.mediaDevices.getUserMedia({ audio: true })
 	.then(function (stream) {
