@@ -186,10 +186,10 @@ int identifyBitCombination(char *bits){
             res = left(res);
         else
             res = right(res); //hvis karakter nr. i er et 1, går man videre med funktionen right
-        printf("res: %d\n", res);        
     }
     return res - pow(2,NUMBER_OF_BITS); //returnerer indices fra 0 til 2^N-1
-    //
+    //det nederste lag i tree'et har pladserne [2^NUMBER_OF_BITS;2^(NUMBER_OF_BITS+1)-1].
+    //Jeg trækker 2^NUMBER_OF_BITS fra, fordi vi så får et indeks i returneret som er 0, hvis bitstrengen
 }
 
 int left(int i){
