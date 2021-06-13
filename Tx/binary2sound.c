@@ -6,6 +6,10 @@
 #include <windows.h>
 #include <time.h>
 
+
+#define NUMBER_OF_BITS 4
+
+
 //Modulation functions
 int _8fsk();
 int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int bitDuration, long int binaryFileLen, int N);
@@ -13,6 +17,9 @@ void addSeparatorTone(int16_t *buffer, long int *n, long int bitDuration, int16_
 void addBitstringTone(int16_t *buffer, long int *n, long int bitDuration, char *binaryBytes, long int j, int16_t **samples, long int binaryFileLen);
 void makeAudio(int16_t *buffer, long int N);
 int calcSamples(int16_t **samples, long int bitDuration, long int N, long int binaryFileLen);
+int identifyBitCombination(char *bits);
+int right(int i);
+int left(int i);
 
 //int _bfsk();
 
@@ -153,28 +160,42 @@ void addSeparatorTone(int16_t *buffer, long int *n, long int bitDuration, int16_
 
 void addBitstringTone(int16_t *buffer, long int *n, long int bitDuration, char *binaryBytes, long int j, int16_t **samples, long int binaryFileLen){
     int i = 0, k = 0;
-    char bitCombinations[14][4] = {"000", "001", "010", "100", "011", "101", "110", "111",
-                                   "00", "01", "10", "11",
-                                   "0", "1"
-                                  };
-    char str[4] = "";
+
+    char str[15] = "";
     long int e = (*n) + bitDuration;//is used in the for loop as the upper bound for n, as the number of samples for each bit sequence/separation tone should be equal to the bitDuration measured in samples
 
-    for (k = 0; k < 3; ++k){
+    for (k = 0; k < NUMBER_OF_BITS; ++k){
         if ((j + k) < binaryFileLen)  //tilføjet 17/5, ikke testet. Men burde forhindre out of bounds
           strncat(str, &binaryBytes[j+k], 1); //copies next three bits from binary img-file into a separate string
     }
 
-    for (i = 0; i < 14; ++i){
-        if (!strcmp(str,bitCombinations[i])){ //compares string to the possible bit combinations to find the correct index
-          break;
-        }
-    }
+    i = identifyBitCombination(str);
 
-    for (*n; *n < e; (*n)++)
-    {
+    for (*n; *n < e; (*n)++){
         buffer[*n] = samples[i+2][(*n) % bitDuration]; //samples[1] is the separation tone, meaning that the tones representing bit seqs have indices 2 through 15
     }
+}
+
+int identifyBitCombination(char *bits){
+    int res = 1, i;
+
+    for (i = 0; i < NUMBER_OF_BITS; ++i){
+        printf("bits[i] = %c\n", bits[i]);
+
+        if (bits[i] == '0')
+            res = left(res);
+        else
+            res = right(res);
+        printf("res: %d\n", res);        
+    }
+    return res - pow(2,NUMBER_OF_BITS); //returnerer indices fra 0 til 2^N-1
+}
+
+int left(int i){
+    return 2*i;
+}
+int right(int i){
+    return 2*i + 1;
 }
 
 // source: https://batchloaf.wordpress.com/2017/02/10/a-simple-way-to-read-and-write-audio-and-video-files-in-c-using-ffmpeg/
