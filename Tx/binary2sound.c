@@ -166,10 +166,10 @@ void addBitstringTone(int16_t *buffer, long int *n, long int bitDuration, char *
 
     for (k = 0; k < NUMBER_OF_BITS; ++k){
         if ((j + k) < binaryFileLen)  //tilføjet 17/5, ikke testet. Men burde forhindre out of bounds
-          strncat(str, &binaryBytes[j+k], 1); //copies next three bits from binary img-file into a separate string
+          strncat(str, &binaryBytes[j+k], 1); //copies next 4 bits from binary img-file into a separate string
     }
 
-    i = identifyBitCombination(str);
+    i = identifyBitCombination(str); //bruges til at finde ud af hvilken bitstreng det er, hvilket bestemmer hvilken tone der skal tilføjes
 
     for (*n; *n < e; (*n)++){
         buffer[*n] = samples[i+2][(*n) % bitDuration]; //samples[1] is the separation tone, meaning that the tones representing bit seqs have indices 2 through 15
@@ -177,18 +177,19 @@ void addBitstringTone(int16_t *buffer, long int *n, long int bitDuration, char *
 }
 
 int identifyBitCombination(char *bits){
-    int res = 1, i;
+  /* I denne funktion undersøges de 4 bits, der ligger i "str". Det gøres nærmest i et binary tree, hvor
+  der gås til venstre, hvis en bit er 0 og højre hvis den er 1 */
+    int res = 1, i; //res indeholder den plads, man ender på i det binary tree
 
     for (i = 0; i < NUMBER_OF_BITS; ++i){
-        printf("bits[i] = %c\n", bits[i]);
-
-        if (bits[i] == '0')
+        if (bits[i] == '0') //hvis karakter nr. i er et 0, bruges funktionen left til at beregne positionen i tree'et
             res = left(res);
         else
-            res = right(res);
+            res = right(res); //hvis karakter nr. i er et 1, går man videre med funktionen right
         printf("res: %d\n", res);        
     }
     return res - pow(2,NUMBER_OF_BITS); //returnerer indices fra 0 til 2^N-1
+    //
 }
 
 int left(int i){
