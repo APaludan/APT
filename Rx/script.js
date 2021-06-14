@@ -134,13 +134,12 @@ function getMedia() {
 
 		function onAudio() { 
 			let spectrum = new Uint8Array(analyser.frequencyBinCount); //an integer half that of the .fftSize - window size deles i bins.
-			void analyser.getByteFrequencyData(spectrum); //fft analysen er lavet og amplituden af frekvenserne smides i spectrum arrayet
-			//copies the current frequency data into the Uint8Array (unsigned byte array) passed into it.
+			void analyser.getByteFrequencyData(spectrum); //fft analysen er lavet og amplituden af frekvenserne smides i spectrum arrayet, indekserne er bins
 			//void because is does not return anything
 			let loudestBin = 0;
       let specFrequency = 0;
-			for (let i = 0; i < analyser.frequencyBinCount; i++) { //loops through the Uint8Array array with the frequencies saved in it
-				if (spectrum[i] > spectrum[loudestBin]) {
+			for (let i = 0; i < analyser.frequencyBinCount; i++) { //loops through spectrum array with the apmlitudes referred to as bins
+				if (spectrum[i] > spectrum[loudestBin]) { //finds the bin with the loudest amplitude
           specFrequency = i * (audioContext.sampleRate / analyser.fftSize); 
           if(specFrequency >= 400 && specFrequency <= 7600){
             loudestBin = i;
