@@ -113,7 +113,8 @@ document.getElementById("reset").addEventListener("click", () => {
 });
 
 //--------------------
-//FORKLAR ALT DET DER GETMEDIA
+//GetMedia runs when the mic is recording
+//The web audio api is used to do this (instead of p5)
 //--------------------
 function getMedia() {
 	navigator.mediaDevices.getUserMedia({ audio: true }) //get access to users audio, takes an object as parameter (audio true and/or video true)
