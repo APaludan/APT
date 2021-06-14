@@ -37,7 +37,8 @@ int _mfsk()
 {
   char *binaryBytes, c;
   int index = 0;
-      //bitDuration has to be divisble by 100 - low enough to not get errors
+      //bitDuration has to be divisble by 100 - low enough to not get errors. 
+      //hvis det er multiplum af 100 passer det med at den skifter mellem frekvenser når de er i bølgedal pga vores phase shift
   long int bitDuration = 300*6; // duration of each bit (samples per bit)
 
   FILE *binaryFilePtr = fopen("../tempFiles/tempBinary.txt", "r");
