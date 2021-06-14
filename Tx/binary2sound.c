@@ -7,7 +7,7 @@
 #include <time.h>
 
 
-#define NUMBER_OF_BITS 3
+#define NUMBER_OF_BITS 4
 
 
 //Modulation functions
@@ -38,7 +38,7 @@ int _mfsk()
   char *binaryBytes, c;
   int index = 0;
       //bitDuration is calculated by dividing the sample rate of the system with the framerate. eg: 44100 / 144 = 306.25 (INT 306) and multiplied by scalar (# of frames for each tone)
-  long int bitDuration = 306*5; // duration of each bit (samples per bit)
+  long int bitDuration = 306*6; // duration of each bit (samples per bit)
 
   FILE *binaryFilePtr = fopen("../tempFiles/tempBinary.txt", "r");
   //  FILE *binaryFilePtr = fopen("../tempFiles/img.txt", "r"); //short binary file for test
@@ -106,7 +106,7 @@ int _mfsk()
 
 int makeAudioBuffer(int16_t *buffer, char *binaryBytes, long int bitDuration, long int binaryFileLen, int N){
   long int n = 0, j = 0; 
-  int16_t *samples[17];
+  int16_t *samples[18];
 
   if (calcSamples(samples, bitDuration, N, binaryFileLen)) //calculates matrix of samples
   {
@@ -150,13 +150,14 @@ void addBitstringTone(int16_t *buffer, long int *n, long int bitDuration, char *
     int i = 0, k = 0;
 
     char str[15] = "";
+    char zero[2] = "0";
     long int e = (*n) + bitDuration;//is used in the for loop as the upper bound for n, as the number of samples for each bit sequence/separation tone should be equal to the bitDuration measured in samples
 
     for (k = 0; k < NUMBER_OF_BITS; ++k){
         if ((j + k) < binaryFileLen)  //tilføjet 17/5, ikke testet. Men burde forhindre out of bounds
           strncat(str, &binaryBytes[j+k], 1); //copies next 4 bits from binary img-file into a separate string
         else
-          strncat(str, '0', 1);
+          strncat(str, zero, 1);
     }
 
     i = identifyBitCombination(str); //bruges til at finde ud af hvilken bitstreng det er, hvilket bestemmer hvilken tone der skal tilføjes
@@ -213,7 +214,7 @@ int calcSamples(int16_t **samples, long int bitDuration, long int N, long int bi
   int bps = binaryFileLen / seconds;  //  calculation for bps
   double p2f_s = 2.0 * M_PI / f_s;
 
-  for (int i = 1; i <= pow(2,NUMBER_OF_BITS); i++) //pow(2,N) = antallet af kombinationer
+  for (int i = 1; i <= pow(2,NUMBER_OF_BITS) + 1; i++) //pow(2,N) = antallet af kombinationer
   {
     samples[i] = malloc(bitDuration * sizeof(int16_t));
     if (samples[i] == NULL)
@@ -238,7 +239,7 @@ int calcSamples(int16_t **samples, long int bitDuration, long int N, long int bi
 void makeAudio(int16_t *buffer, long int N)
 {
   // Pipe the audio data to ffmpeg, which writes it to an audio file (wav/flac..)
-  FILE *audioPtr = popen("ffmpeg.exe -hide_banner -loglevel error -y -f s16le -acodec pcm_s16le -vn -ar 44000 -ac 1 -i - ../tempFiles/imageAudio.wav", "w");
+  FILE *audioPtr = popen("ffmpeg.exe -y -f s16le -acodec pcm_s16le -vn -ar 44000 -ac 1 -i - ../tempFiles/imageAudio.wav", "w");
     fwrite(buffer, 2, N, audioPtr);
     pclose(audioPtr);
   

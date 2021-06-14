@@ -139,7 +139,7 @@ function getMedia() {
 			for (let i = 0; i < analyser.frequencyBinCount; i++) { //loops through the Uint8Array array with the frequencies saved in it
 				if (spectrum[i] > spectrum[loudestBin]) {
           specFrequency = i * (audioContext.sampleRate / analyser.fftSize); 
-          if(specFrequency >= 400 && specFrequency <= 7000){
+          if(specFrequency >= 400 && specFrequency <= 7600){
             loudestBin = i;
           }
 				}
