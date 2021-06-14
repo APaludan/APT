@@ -119,20 +119,23 @@ document.getElementById("reset").addEventListener("click", () => {
 function getMedia() {
 	navigator.mediaDevices.getUserMedia({ audio: true }) //get access to users audio, takes an object as parameter (audio true and/or video true)
 	.then(function (stream) { //if promise is resolved then execute line 121 to 154, stream is a result of the promise getUserMedia
+		//gør tingene klar
 		let audioContext = new AudioContext({ sampleRate: 384000 }); //make new audio context with the given sample rate 
 		let input = audioContext.createMediaStreamSource(stream); //creates audio stream representing the mic input audio
-		let analyser = audioContext.createAnalyser(); //gør det muligt at finde frekvensen på tonen
-		let scriptProcessor = audioContext.createScriptProcessor(256, 1, 1); //the buffer 
-		analyser.smoothingTimeConstant = 0.0; 
-		analyser.fftSize = 16384; //window size of fft in number of samples
+		let analyser = audioContext.createAnalyser(); //gør det muligt at analysere lyden
+		let scriptProcessor = audioContext.createScriptProcessor(256, 1, 1); //the buffer - amplitudeværdierne smides i bufferen
+		analyser.smoothingTimeConstant = 0.0; //når den næste buffer skal fyldes kommer den lige efter den der var før 
+		analyser.fftSize = 16384; //window size of fft in number of samples - analyserer så mange samples af gangen
 
+		//sammensætter tingene 
 		input.connect(analyser); //connects input to the analyser
-		analyser.connect(scriptProcessor); //connects analyser to scriptProcessor
+		analyser.connect(scriptProcessor); //connects analyser to scriptProcessor (bufferen)
 		scriptProcessor.connect(audioContext.destination); //connects scriptProcessor to the mic as its input buffer
 
 		function onAudio() { 
-			let spectrum = new Uint8Array(analyser.frequencyBinCount); //an integer half that of the .fftSize.
-			void analyser.getByteFrequencyData(spectrum); //copies the current frequency data into the Uint8Array (unsigned byte array) passed into it.
+			let spectrum = new Uint8Array(analyser.frequencyBinCount); //an integer half that of the .fftSize - window size deles i bins.
+			void analyser.getByteFrequencyData(spectrum); //fft analysen er lavet og amplituden af frekvenserne smides i spectrum arrayet
+			//copies the current frequency data into the Uint8Array (unsigned byte array) passed into it.
 			//void because is does not return anything
 			let loudestBin = 0;
       let specFrequency = 0;
@@ -144,9 +147,9 @@ function getMedia() {
           }
 				}
 			}
-			let frequency = loudestBin * (audioContext.sampleRate / analyser.fftSize);
+			let frequency = loudestBin * (audioContext.sampleRate / analyser.fftSize); //regner frekvensen ud, ud fra den bin der havde den højeste amplitude
 			
-			document.getElementById("spectogram").style.width = `${loudestBin/500*50}vw`;
+			document.getElementById("spectogram").style.width = `${loudestBin/500*50}vw`; 
 			//if recording is true and the freq is either valid or a separation tone then push to spec
 			if (recording && (isValidFreq(frequency) || compare(frequency, sepFreq))) {
 				spec.push(frequency);
