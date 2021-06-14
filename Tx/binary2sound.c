@@ -38,7 +38,7 @@ int _mfsk()
   char *binaryBytes, c;
   int index = 0;
       //bitDuration is calculated by dividing the sample rate of the system with the framerate. eg: 44100 / 144 = 306.25 (INT 306) and multiplied by scalar (# of frames for each tone)
-  long int bitDuration = 306*6; // duration of each bit (samples per bit)
+  long int bitDuration = 300*6; // duration of each bit (samples per bit)
 
   FILE *binaryFilePtr = fopen("../tempFiles/tempBinary.txt", "r");
   //  FILE *binaryFilePtr = fopen("../tempFiles/img.txt", "r"); //short binary file for test
