@@ -113,7 +113,7 @@ document.getElementById("reset").addEventListener("click", () => {
 });
 
 //--------------------
-//GetMedia runs when the mic is recording
+//GetMedia runs when the mic is recording!
 //The web audio api is used to do this (instead of p5)
 //--------------------
 function getMedia() {
@@ -133,12 +133,12 @@ function getMedia() {
 		function onAudio() { 
 			let spectrum = new Uint8Array(analyser.frequencyBinCount); //an integer half that of the .fftSize.
 			void analyser.getByteFrequencyData(spectrum); //copies the current frequency data into the Uint8Array (unsigned byte array) passed into it.
-			//console.log(spectrum);
+			//void because is does not return anything
 			let loudestBin = 0;
       let specFrequency = 0;
-			for (let i = 0; i < analyser.frequencyBinCount; i++) { 
+			for (let i = 0; i < analyser.frequencyBinCount; i++) { //loops through the Uint8Array array with the frequencies saved in it
 				if (spectrum[i] > spectrum[loudestBin]) {
-          specFrequency = i * (audioContext.sampleRate / analyser.fftSize);
+          specFrequency = i * (audioContext.sampleRate / analyser.fftSize); 
           if(specFrequency >= 400 && specFrequency <= 7000){
             loudestBin = i;
           }
@@ -153,7 +153,7 @@ function getMedia() {
 			}
 		};
 		scriptProcessor.addEventListener('audioprocess', onAudio);
-	}).catch (error => {
+	}).catch (error => { //error handling
 		console.error(error.message, "- check if your browser allows access to a microphone");
 	});
 }
