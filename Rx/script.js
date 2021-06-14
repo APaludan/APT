@@ -168,6 +168,7 @@ function showImage(bitstring) {
 	console.log(encodedData);
 
 	document.getElementById("img").src = "data:image/bmp;base64," + encodedData;
+	document.getElementById("img").style.imageRendering = "pixelated";
 
 	//Before btoa can be used, the binary data needs to be converted to a string
 	function binaryToString(str) {
