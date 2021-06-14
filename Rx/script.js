@@ -121,14 +121,14 @@ function getMedia() {
 	.then(function (stream) { //if promise is resolved then execute line 121 to 154, stream is a result of the promise getUserMedia
 		let audioContext = new AudioContext({ sampleRate: 384000 }); //make new audio context with the given sample rate 
 		let input = audioContext.createMediaStreamSource(stream); //creates audio stream representing the mic input audio
-		let analyser = audioContext.createAnalyser(); 
-		let scriptProcessor = audioContext.createScriptProcessor(256, 1, 1); //the buffer
+		let analyser = audioContext.createAnalyser(); //gør det muligt at finde frekvensen på tonen
+		let scriptProcessor = audioContext.createScriptProcessor(256, 1, 1); //the buffer 
 		analyser.smoothingTimeConstant = 0.0; 
 		analyser.fftSize = 16384; //window size of fft in number of samples
 
 		input.connect(analyser); //connects input to the analyser
 		analyser.connect(scriptProcessor); //connects analyser to scriptProcessor
-		scriptProcessor.connect(audioContext.destination); //connects scriptProcessor to the mic
+		scriptProcessor.connect(audioContext.destination); //connects scriptProcessor to the mic as its input buffer
 
 		function onAudio() { 
 			let spectrum = new Uint8Array(analyser.frequencyBinCount); //an integer half that of the .fftSize.
