@@ -137,13 +137,14 @@ function getMedia() {
 			void analyser.getByteFrequencyData(spectrum); //fft analysen er lavet og amplituden af frekvenserne smides i spectrum arrayet, indekserne er bins
 			//void because is does not return anything
 			let loudestBin = 0;
-      let specFrequency = 0;
+      		let specFrequency = 0;
+
 			for (let i = 0; i < analyser.frequencyBinCount; i++) { //loops through spectrum array with the apmlitudes referred to as bins
-				if (spectrum[i] > spectrum[loudestBin]) { //finds the bin with the loudest amplitude
-          specFrequency = i * (audioContext.sampleRate / analyser.fftSize); 
-          if(specFrequency >= 400 && specFrequency <= 7600){
-            loudestBin = i;
-          }
+				if (spectrum[i] > spectrum[loudestBin] && spectrum[i] > 120) { //finds the bin with the loudest amplitude
+          			specFrequency = i * (audioContext.sampleRate / analyser.fftSize); 
+          			if(specFrequency >= 400 && specFrequency <= 7600){
+            			loudestBin = i;
+          			}
 				}
 			}
 			let frequency = loudestBin * (audioContext.sampleRate / analyser.fftSize); //regner frekvensen ud, ud fra den bin der havde den højeste amplitude
