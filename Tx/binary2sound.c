@@ -130,7 +130,7 @@ void addSeparatorTone(int16_t *buffer, long int *n, long int bitDuration, int16_
   long int e; //is used in the for loop as the upper bound for n, as the number of samples for each bit sequence/separation tone should be equal to the bitDuration measured in samples
   int i;
 
-  if (isFirst){ //hvis det er den første tone lægges der en kvart bølge ind i bufferen først, for at amplituden starter i 0
+  if (isFirst){ //hvis det er den første tone lægges der en kvart periode/bølge ind i bufferen først, for at amplituden starter i 0
     for (i = 75; i < 100; i++, (*n)++){
       buffer[*n] = samples[1][i % bitDuration];
     }
