@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
     if SEEK_SET: moves pointer to start of file 
     fseek(file pointer, offset from position, sets the pointers start position from where to read)
   */
-  fseek(imagePtr, 0, SEEK_END);
+  fseek(imagePtr, 0, SEEK_END); //0 vi vil ikke forskyde bytesene som vi kigger på
   long imageFileSize = ftell(imagePtr); //Tells the position of the pointer
   fseek(imagePtr, 0, SEEK_SET);
   
