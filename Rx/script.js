@@ -148,6 +148,8 @@ function getMedia() {
 				}
 			}
 			let frequency = loudestBin * (audioContext.sampleRate / analyser.fftSize); //regner frekvensen ud, ud fra den bin der havde den højeste amplitude
+			//((sampleRate/2)/(fftSize/2)) fordi sampleRate/2 = det frekvensområde, vi undersøger 
+			//og fftSize/2 = antal bins, så det er altså frekvenser/bins.
 
 			document.getElementById("spectogram").style.width = `${loudestBin/500*50}vw`; 
 			//if recording is true and the freq is either valid or a separation tone then push to spec
